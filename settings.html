@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick Bridge Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00ffc3;
+            --bg-main: #10131a;
+            --bg-card: #181c24;
+            --border-radius: 14px;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--bg-main);
+            color: #e0e0e0;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .main-row {
+            display: flex;
+            flex-direction: row;
+            gap: 2.5em;
+            margin-top: 3.5em;
+            margin-bottom: 1.5em;
+            width: 100%;
+            justify-content: center;
+        }
+        .settings-row, .info-row {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 32px rgba(0,255,255,0.07);
+            padding: 2.2em 2em 1.7em 2em;
+            width: 100%;
+            max-width: 370px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2em;
+        }
+        .info-row {
+            box-shadow: 0 2px 16px rgba(0,255,255,0.04);
+            color: #b2f7ef;
+            font-size: 1em;
+            margin: 0;
+        }
+        .info-row h2 {
+            color: var(--accent);
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            font-weight: 700;
+        }
+        .info-row code {
+            background: #10131a;
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.98em;
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 1.5em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.7em;
+            letter-spacing: 0.5px;
+        }
+        .section {
+            margin-bottom: 1.1em;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.2em;
+            font-weight: 500;
+            font-size: 1em;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 0.7em;
+            border-radius: 8px;
+            border: 1.5px solid #23272f;
+            background: #181c24;
+            color: #e0e0e0;
+            font-size: 1em;
+            margin-bottom: 0.7em;
+            margin-top: 0.1em;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border: 1.5px solid var(--accent);
+            outline: none;
+            box-shadow: 0 0 8px #00ffc344;
+        }
+        button {
+            background: var(--accent);
+            color: #181c24;
+            border: none;
+            padding: 0.7em 1.5em;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            margin-right: 0.5em;
+            margin-top: 0.2em;
+            box-shadow: 0 2px 12px #00ffc344;
+        }
+        button:hover {
+            background: #00bfff;
+            color: #fff;
+        }
+        .result {
+            margin-top: 0.3em;
+            background: #151922;
+            padding: 0.7em 1em;
+            border-radius: 8px;
+            font-size: 1em;
+            word-break: break-all;
+            border-left: 4px solid var(--accent);
+        }
+        .error {
+            color: #ff6b6b;
+            margin-top: 0.5em;
+            min-height: 1.2em;
+            font-size: 1em;
+        }
+        .url-box {
+            margin-top: 0.7em;
+            background: #151922;
+            padding: 0.7em 1em;
+            border-radius: 6px;
+            border: 1.5px solid var(--accent);
+            font-size: 1em;
+            word-break: break-all;
+        }
+        .footer {
+            margin-top: 1.5em;
+            text-align: center;
+            color: var(--accent);
+            font-size: 1em;
+            font-weight: 600;
+            opacity: 0.85;
+        }
+        .footer a {
+            color: #00bfff;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 0.5em;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        @media (max-width: 900px) {
+            .main-row {
+                flex-direction: column;
+                gap: 1.5em;
+                margin-top: 2em;
+            }
+            .settings-row, .info-row {
+                max-width: 98vw;
+                padding: 1.2em 0.5em 1em 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-row">
+        <div class="settings-row">
+            <h1>Kick-> Streamerbot | Bridge Settings</h1>
+            <div class="section">
+                <label for="kick-username">Kick Username</label>
+                <input type="text" id="kick-username" placeholder="e.g. mykickusername" autocomplete="off" />
+                <button onclick="fetchChatroomId()">Fetch Chatroom ID</button>
+                <div id="kick-result" class="result" style="display:none;"></div>
+            </div>
+            <div class="section">
+                <label for="sb-ip">Streamer.bot IP</label>
+                <input type="text" id="sb-ip" placeholder="127.0.0.1" />
+                <label for="sb-port">Streamer.bot Port</label>
+                <input type="number" id="sb-port" placeholder="8080" min="1" max="65535" />
+            </div>
+            <div class="section">
+                <label for="reward-prefix">Reward Action Prefix</label>
+                <input type="text" id="reward-prefix" placeholder="KickReward-" />
+            </div>
+            <div class="section" style="display:flex;flex-wrap:wrap;gap:0.7em 0.7em;align-items:center;justify-content:center;">
+                <button onclick="saveSettings()">Save Settings</button>
+                <button class="copy-btn" onclick="copyBridgeUrl()">Copy Bridge URL</button>
+            </div>
+            <div id="url" class="url-box" style="display:none;"></div>
+            <div id="error" class="error"></div>
+        </div>
+        <div class="info-row">
+            <h2>How to use Reward Action Prefix</h2>
+            <ul style="margin-top:0.5em;margin-bottom:1.2em;padding-left:1.2em;">
+                <li>The <b>Reward Action Prefix</b> is used to generate Streamer.bot action names for Kick rewards.</li>
+                <li>For example, if the prefix is <code>KickReward-</code> and the reward title is <code>Shoutout</code>, the action name will be <code>KickReward-Shoutout</code>.</li>
+                <li>You can change the prefix to match your own Streamer.bot action naming scheme.</li>
+            </ul>
+            <h2>How to use in OBS</h2>
+            <ul style="margin-top:0.5em;padding-left:1.2em;">
+                <li>Fill in your Kick username and Streamer.bot details, then click <b>Save Settings</b>.</li>
+                <li>Click <b>Copy Bridge URL</b> to copy your personalized URL.</li>
+                <li>In OBS, add a new <b>Browser Source</b> and paste the copied URL.</li>
+                <li>The bridge will connect your Kick chat and rewards to Streamer.bot using your settings.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 ichrisirl &mdash;
+        <a href="https://discord.gg/ichrisirl" target="_blank" rel="noopener">Join my Discord</a>
+    </div>
+    <script>
+        window.onload = function() {
+            const saved = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+            document.getElementById('kick-username').value = saved.kickUsername || '';
+            document.getElementById('sb-ip').value = saved.sbIp || '127.0.0.1';
+            document.getElementById('sb-port').value = saved.sbPort || '8080';
+            document.getElementById('reward-prefix').value = saved.rewardPrefix || 'KickReward-';
+            if (saved.chatroomId) {
+                document.getElementById('kick-result').innerHTML = `<strong>Chatroom ID:</strong> <code>${saved.chatroomId}</code>`;
+                document.getElementById('kick-result').style.display = 'block';
+            }
+        };
+        async function fetchChatroomId() {
+            const username = document.getElementById('kick-username').value.trim();
+            const resultDiv = document.getElementById('kick-result');
+            const errorDiv = document.getElementById('error');
+            resultDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            if (!username) {
+                errorDiv.textContent = 'Please enter a Kick username.';
+                return;
+            }
+            resultDiv.textContent = 'Fetching...';
+            resultDiv.style.display = 'block';
+            try {
+                const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(username)}`);
+                if (!res.ok) throw new Error('User not found or API error.');
+                const data = await res.json();
+                if (!data.chatroom || !data.chatroom.id) throw new Error('Chatroom ID not found for this user.');
+                const chatroomId = data.chatroom.id;
+                resultDiv.innerHTML = `<strong>Chatroom ID:</strong> <code>${chatroomId}</code>`;
+                resultDiv.style.display = 'block';
+                // Save to localStorage
+                const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+                settings.kickUsername = username;
+                settings.chatroomId = chatroomId;
+                localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
+            } catch (err) {
+                resultDiv.style.display = 'none';
+                errorDiv.textContent = err.message;
+            }
+        }
+        function saveSettings() {
+            const username = document.getElementById('kick-username').value.trim();
+            const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
+            const sbPort = document.getElementById('sb-port').value.trim() || '8080';
+            const rewardPrefix = document.getElementById('reward-prefix').value || 'KickReward-';
+            const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+            if (username) settings.kickUsername = username;
+            settings.sbIp = sbIp;
+            settings.sbPort = sbPort;
+            settings.rewardPrefix = rewardPrefix;
+            localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
+            document.getElementById('error').textContent = 'Settings saved!';
+            setTimeout(() => { document.getElementById('error').textContent = ''; }, 1500);
+        }
+        function copyBridgeUrl() {
+            const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+            const sbIp = settings.sbIp || '127.0.0.1';
+            const sbPort = settings.sbPort || '8080';
+            const rewardPrefix = settings.rewardPrefix || 'KickReward-';
+            if (!settings.chatroomId) {
+                document.getElementById('error').textContent = 'Please set all settings and fetch Chatroom ID first.';
+                return;
+            }
+            let url = `${window.location.origin}/kickbridge.html?chatroom_id=${settings.chatroomId}`;
+            if (sbIp !== '127.0.0.1') url += `&sb_ip=${encodeURIComponent(sbIp)}`;
+            if (sbPort !== '8080') url += `&sb_port=${sbPort}`;
+            if (rewardPrefix !== 'KickReward-') url += `&reward_prefix=${encodeURIComponent(rewardPrefix)}`;
+            navigator.clipboard.writeText(url);
+            document.getElementById('url').innerHTML = `<strong>Bridge URL:</strong> <code>${url}</code>`;
+            document.getElementById('url').style.display = 'block';
+            document.getElementById('error').textContent = 'Bridge URL copied!';
+            setTimeout(() => { document.getElementById('error').textContent = ''; }, 1500);
+        }
+    </script>
+</body>
+</html> 
