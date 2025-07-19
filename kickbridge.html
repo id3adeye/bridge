@@ -356,36 +356,13 @@
         if (name === 'sb_port') return settings.sbPort;
         return undefined;
     }
-    // Use 'user' as the only query parameter for Kick username
-    const userParam = getQueryParam('user');
-    let chatroomId = undefined;
+    // Use 'chatroomid' as the main query parameter for the chatroom ID
+    const chatroomId = getQueryParam('chatroomid');
     const sbIp = getQueryParam('sbip') || getSetting('sb_ip');
     const sbPort = getQueryParam('sbport') || getSetting('sb_port');
-    async function resolveChatroomIdFromUsername(username) {
-        showStatus('Connecting...');
-        try {
-            const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(username)}`);
-            if (!res.ok) throw new Error('User not found or API error.');
-            const data = await res.json();
-            if (!data.chatroom || !data.chatroom.id) throw new Error('Chatroom ID not found for this user.');
-            return data.chatroom.id;
-        } catch (err) {
-            showStatus('Not connected: ' + err.message);
-            throw err;
-        }
-    }
-    (async function() {
-        if (userParam) {
-            try {
-                chatroomId = await resolveChatroomIdFromUsername(userParam);
-            } catch {
-                return;
-            }
-        }
-        if (!chatroomId || !sbIp || !sbPort) {
-            showStatus('Not connected: Missing settings');
-            return;
-        }
+    if (!chatroomId || !sbIp || !sbPort) {
+        showStatus('Not connected: Missing settings');
+    } else {
         let kickConnected = false;
         let sbConnected = false;
         function updateStatus() {
@@ -457,7 +434,7 @@
         });
         updateStatus();
         connectStreamerBot();
-    })();
+    }
 </script>
 </body>
 </html>
