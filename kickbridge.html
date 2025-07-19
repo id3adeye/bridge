@@ -331,370 +331,109 @@
         }
     </style>
 </head>
-<body>
-    <div id="error-container" class="center-error hidden">
-        <div id="error-box" class="error-box"></div>
-    </div>
-    <script>
-        // --- Settings Loader ---
-        function getQueryParam(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
-        function getSetting(name) {
-            // Prefer query param, fallback to localStorage
-            const qp = getQueryParam(name);
-            if (qp) return qp;
-            const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
-            if (name === 'chatroom_id') return settings.chatroomId;
-            if (name === 'sb_ip') return settings.sbIp;
-            if (name === 'sb_port') return settings.sbPort;
-            return undefined;
-        }
-        const chatroomId = getSetting('chatroom_id');
-        const sbIp = getSetting('sb_ip');
-        const sbPort = getSetting('sb_port');
-        if (!chatroomId || !sbIp || !sbPort) {
-            // Show nothing if any setting is missing
-            document.body.innerHTML = '';
-        } else {
-            // Hide all UI by default
-            function showError(message) {
-                document.getElementById('error-box').textContent = message;
-                document.getElementById('error-container').classList.remove('hidden');
-            }
-            function hideError() {
-                document.getElementById('error-container').classList.add('hidden');
-            }
-            // --- Bridge code below (Account 1 only) ---
-            const KICK_PUSHER_KEY = "32cbd69e4b950bf97679";
-            const KICK_PUSHER_CLUSTER = "us2";
-            const ACCOUNT = {
-                id: 1,
-                name: "KickUser",
-                chatroomId: chatroomId,
-                streamerId: chatroomId, // fallback, can be improved if needed
-                channels: {
-                    chatroom_v2: `chatrooms.${chatroomId}.v2`,
-                    chatroom: `chatroom_${chatroomId}`,
-                    chatrooms: `chatrooms.${chatroomId}`
-                }
-            };
-            const SB_WEBSOCKET_IP = sbIp;
-            const SB_WEBSOCKET_PORT = sbPort;
-            const SB_WEBSOCKET_ENDPOINT = "/";
-            const SB_ACTION_NAME_ON_CHAT = "YourChatActionName";
-            const SB_ACTION_NAME_ON_FOLLOW = "YourFollowActionName"; // Replace with the SB action name for follows (if needed)
-            // Add more action names for other events as needed
-
-            const messagesDiv = document.getElementById('messages');
-
-            let sbSocket = null;
-            let loggingPaused = false;
-            let pendingRequests = new Map(); // Track pending requests for error handling
-            // Auth tokens removed - using public channels only
-
-            // Auth management removed - using public channels only
-
-            function logEvent(message, type = 'info', category = 'system') {
-                if (
-                    type === 'error' &&
-                    (message.toLowerCase().includes('streamer.bot') ||
-                     message.toLowerCase().includes('sb') ||
-                     category === 'sb' ||
-                     message.toLowerCase().includes('websocket'))
-                ) {
-                    showError('Cannot connect to Streamer.bot');
-                } else if (
-                    type === 'error' &&
-                    (message.toLowerCase().includes('kick') || category === 'kick')
-                ) {
-                    showError('Cannot connect to Kick');
-                }
-                // Do not display any other UI
-            }
-            
-            function toggleLogging() {
-                loggingPaused = !loggingPaused;
-                const btn = document.querySelector('.btn-pause');
-                btn.textContent = loggingPaused ? 'Resume' : 'Pause';
-                btn.style.background = loggingPaused ? '#00b894' : '#ffa502';
-                
-                if (!loggingPaused) {
-                    logEvent('📝 Logging resumed', 'info', 'system');
-                }
-            }
-            
-            function clearLogs() {
-                messagesDiv.innerHTML = '';
-                logEvent('🗑️ Logs cleared', 'info', 'system');
-            }
-            
-            // --- Streamer.bot WebSocket Connection ---
-            function connectStreamerBot() {
-                const wsUrl = `ws://${SB_WEBSOCKET_IP}:${SB_WEBSOCKET_PORT}${SB_WEBSOCKET_ENDPOINT}`;
-                console.log(`%c[Streamer.bot]%c 🔗 Connecting to: %c${wsUrl}`, 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#4ecdc4;font-weight:bold;', 'color:#fff;');
-                logEvent(`🔗 Connecting to Streamer.bot at ${wsUrl}`, 'connection', 'sb');
-                try {
-                    sbSocket = new WebSocket(wsUrl);
-
-                    sbSocket.onopen = () => {
-                        console.log('%c[Streamer.bot]%c ✅ Connected successfully', 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#00e676;font-weight:bold;');
-                        hideError();
-                        logEvent("✅ Streamer.bot connected successfully", 'success', 'sb');
-                    };
-
-                    sbSocket.onmessage = (event) => {
-                        try {
-                            const data = JSON.parse(event.data);
-                            console.log('%c[Streamer.bot]%c 📩 Message:', 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;', data);
-                        } catch (e) {
-                            console.log('%c[Streamer.bot]%c 📩 Raw message:', 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;', event.data);
-                        }
-                    };
-
-                    sbSocket.onerror = (error) => {
-                        console.error('%c[Streamer.bot]%c ❌ Connection error:', 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#ff6b6b;font-weight:bold;', error);
-                        logEvent(`❌ Connection error: ${error.message || 'WebSocket error'}`, 'error', 'sb');
-                    };
-
-                    sbSocket.onclose = (event) => {
-                        const reason = event.code === 1006 ? 'Connection refused' : `Code ${event.code}`;
-                        console.warn(`%c[Streamer.bot]%c 🔌 Disconnected (${reason}). Retrying in 5s...`, 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#ffa502;font-weight:bold;');
-                        logEvent(`🔌 Disconnected (${reason}). Retrying in 5s...`, 'warning', 'sb');
-                        sbSocket = null;
-                        setTimeout(connectStreamerBot, 5000);
-                    };
-                } catch (error) {
-                    console.error('%c[Streamer.bot]%c ❌ Failed to create connection:', 'color:#fff;background:#4ecdc4;padding:2px 6px;border-radius:4px;', 'color:#ff6b6b;font-weight:bold;', error);
-                    logEvent(`❌ Failed to create connection: ${error.message}`, 'error', 'sb');
-                    setTimeout(connectStreamerBot, 5000);
-                }
-            }
-
-            function sendToStreamerBot(actionName, args = {}) {
-                if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
-                    const requestId = `kick-${Date.now()}`;
-                    const request = {
-                        "request": "DoAction",
-                        "action": {
-                            "name": actionName
-                        },
-                        "args": args,
-                        "id": requestId
-                    };
-                    
-                    // Store the request for error handling
-                    pendingRequests.set(requestId, {
-                        actionName: actionName,
-                        timestamp: Date.now()
-                    });
-                    
-                    const argKeys = Object.keys(args);
-                    const argSummary = argKeys.length > 0 ? ` (${argKeys.join(', ')})` : '';
-                    logEvent(`🚀 Executing action: <strong>${actionName}</strong>${argSummary}`, 'success', 'sb');
-                    
-                    sbSocket.send(JSON.stringify(request));
-                } else {
-                    logEvent("⚠️ Cannot execute action: Not connected", 'warning', 'sb');
-                }
-            }
-
-            // --- Kick Pusher Connection ---
-            console.log('%c[Kick]%c 🔌 Initializing Kick connection...', 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#45b7d1;font-weight:bold;');
-            logEvent("🔌 Initializing Kick connection...", 'connection', 'kick');
-            const pusher = new Pusher(KICK_PUSHER_KEY, {
-                cluster: KICK_PUSHER_CLUSTER,
-                forceTLS: true
-            });
-
-            pusher.connection.bind('state_change', (states) => {
-                const icons = {
-                    'connected': '✅',
-                    'connecting': '🔄',
-                    'disconnected': '❌',
-                    'unavailable': '⚠️'
-                };
-                const statusMap = {
-                    'connected': 'connected',
-                    'connecting': 'connecting',
-                    'disconnected': 'disconnected',
-                    'unavailable': 'disconnected'
-                };
-                console.log(`%c[Kick]%c ${icons[states.current] || '📡'} Connection ${states.current}`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#45b7d1;font-weight:bold;');
-                logEvent(`${icons[states.current] || '📡'} Connection ${states.current}`, 'connection', 'kick');
-            });
-
-            pusher.connection.bind('error', (err) => {
-                const errorMsg = err.error?.data?.message || err.error?.message || 'Unknown error';
-                console.error('%c[Kick]%c ❌ Connection error:', 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#ff6b6b;font-weight:bold;', errorMsg);
-                logEvent(`❌ Connection error: ${errorMsg}`, 'error', 'kick');
-            });
-
-            // Subscribe to channels for the single account
-            const account = ACCOUNT;
-            if (account.chatroomId === "YOUR_SECOND_CHATROOM_ID" || !account.chatroomId) {
-                logEvent(`⏭️ Skipping ${account.name} - configuration needed`, 'warning', 'kick');
+<body style="background: transparent;">
+    <div id="status-message" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(15,15,15,0.85);color:#fff;font-size:2em;font-weight:bold;text-align:center;"></div>
+<script>
+    function showStatus(msg) {
+        var el = document.getElementById('status-message');
+        el.textContent = msg;
+        el.style.display = 'flex';
+    }
+    function hideStatus() {
+        var el = document.getElementById('status-message');
+        el.style.display = 'none';
+    }
+    function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name);
+    }
+    function getSetting(name) {
+        const qp = getQueryParam(name);
+        if (qp) return qp;
+        const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+        if (name === 'chatroom_id') return settings.chatroomId;
+        if (name === 'sb_ip') return settings.sbIp;
+        if (name === 'sb_port') return settings.sbPort;
+        return undefined;
+    }
+    const chatroomId = getSetting('chatroom_id');
+    const sbIp = getSetting('sb_ip');
+    const sbPort = getSetting('sb_port');
+    if (!chatroomId || !sbIp || !sbPort) {
+        showStatus('Not connected: Missing settings');
+    } else {
+        let kickConnected = false;
+        let sbConnected = false;
+        function updateStatus() {
+            if (!kickConnected && !sbConnected) {
+                showStatus('Not connected');
+            } else if (!kickConnected) {
+                showStatus('Not connected to Kick');
+            } else if (!sbConnected) {
+                showStatus('Not connected to Streamer.bot');
             } else {
-                console.log(`%c[Kick]%c 📺 Setting up ${account.name} channels`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;');
-                // Subscribe to chatroom_v2
-                const chatroomV2Sub = pusher.subscribe(account.channels.chatroom_v2);
-                chatroomV2Sub.bind_global((eventName, data) => {
-                    if (shouldLogEvent(eventName)) {
-                        console.log(`%c[Kick]%c 📡 [${account.name}] ${eventName}`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;', data);
-                        logEvent(`📡 [${account.name}] ${eventName}`, 'info', 'kick');
-                    }
-                });
-                // Subscribe to chatroom (no v2)
-                const chatroomSub = pusher.subscribe(account.channels.chatroom);
-                chatroomSub.bind_global((eventName, data) => {
-                    if (shouldLogEvent(eventName)) {
-                        console.log(`%c[Kick]%c 📡 [${account.name}] ${eventName}`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;', data);
-                        logEvent(`📡 [${account.name}] ${eventName}`, 'info', 'kick');
-                    }
-                });
-                // Subscribe to chatrooms
-                const chatroomsSub = pusher.subscribe(account.channels.chatrooms);
-                chatroomsSub.bind_global((eventName, data) => {
-                    if (shouldLogEvent(eventName)) {
-                        console.log(`%c[Kick]%c 📡 [${account.name}] ${eventName}`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#b2f7ef;font-weight:bold;', data);
-                        logEvent(`📡 [${account.name}] ${eventName}`, 'info', 'kick');
-                    }
-                });
-                // Store subscriptions
-                const subscriptions = [{
-                    account: account,
-                    chatroomV2: chatroomV2Sub,
-                    chatroom: chatroomSub,
-                    chatrooms: chatroomsSub
-                }];
-                // Add event handlers for the single account
-                subscriptions.forEach(sub => {
-                    const account = sub.account;
-                    // Reward handlers
-                    sub.chatroom.bind('RewardRedeemedEvent', (data) => {
-                        console.log(`%c[Kick]%c 🎁 [${account.name}] RewardRedeemedEvent`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#fd79a8;font-weight:bold;', data);
-                        handleRewardRedemption(account, data);
-                    });
-                    sub.chatrooms.bind('RewardRedeemedEvent', (data) => {
-                        console.log(`%c[Kick]%c 🎁 [${account.name}] RewardRedeemedEvent`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#fd79a8;font-weight:bold;', data);
-                        handleRewardRedemption(account, data);
-                    });
-                    // Chat message handlers
-                    sub.chatroomV2.bind('App\\Events\\ChatMessageSentEvent', (data) => {
-                        console.log(`%c[Kick]%c 💬 [${account.name}] ChatMessageSentEvent`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#81ecec;font-weight:bold;', data);
-                        handleChatMessage(account, data);
-                    });
-                    // Subscription status handlers
-                    sub.chatroom.bind('pusher:subscription_succeeded', () => {
-                        console.log(`%c[Kick]%c ✅ [${account.name}] Chatroom connected`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#00e676;font-weight:bold;');
-                        logEvent(`✅ [${account.name}] Chatroom connected`, 'success', 'kick');
-                    });
-                    sub.chatroom.bind('pusher:subscription_error', (status) => {
-                        console.error(`%c[Kick]%c ❌ [${account.name}] Chatroom connection failed`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#ff6b6b;font-weight:bold;', status);
-                        logEvent(`❌ [${account.name}] Chatroom connection failed: ${JSON.stringify(status)}`, 'error', 'kick');
-                    });
-                    sub.chatroomV2.bind('pusher:subscription_succeeded', () => {
-                        console.log(`%c[Kick]%c ✅ [${account.name}] Chatroom V2 connected`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#00e676;font-weight:bold;');
-                        logEvent(`✅ [${account.name}] Chatroom V2 connected`, 'success', 'kick');
-                    });
-                    sub.chatroomV2.bind('pusher:subscription_error', (status) => {
-                        console.error(`%c[Kick]%c ❌ [${account.name}] Chatroom V2 connection failed`, 'color:#fff;background:#45b7d1;padding:2px 6px;border-radius:4px;', 'color:#ff6b6b;font-weight:bold;', status);
-                        logEvent(`❌ [${account.name}] Chatroom V2 connection failed`, 'error', 'kick');
-                    });
-                });
+                hideStatus();
             }
-            
-            function shouldLogEvent(eventName) {
-                const importantEvents = ['ChatMessage', 'Reward', 'Follow', 'Subscribe', 'Gift', 'Raid', 'Host'];
-                return importantEvents.some(event => eventName.includes(event));
-            }
-
-            // Reward redemption handler function
-            function handleRewardRedemption(account, data) {
-                let rewardData = null;
-
-                // Handle data whether it's a string or already an object
-                if (typeof data === 'string') {
-                    try {
-                        rewardData = JSON.parse(data);
-                    } catch (e) {
-                        logEvent(`❌ [${account.name}] Failed to parse reward data`, 'error');
-                        return;
-                    }
-                } else if (typeof data === 'object' && data !== null) {
-                     rewardData = data;
-                } else {
-                    logEvent(`❌ [${account.name}] Invalid reward data type`, 'error');
-                    return;
-                }
-
-                if (!rewardData || typeof rewardData !== 'object') {
-                     logEvent(`❌ [${account.name}] Invalid reward object`, 'error');
-                     return;
-                }
-
-                const rewardTitle = rewardData.reward_title;
-                const username = rewardData.username;
-                const userInput = rewardData.user_input;
-
-                const displayInput = userInput ? ` with input: "<em>${userInput}</em>"` : '';
-                logEvent(`🎁 [${account.name}] <strong>${username}</strong> redeemed <strong>${rewardTitle}</strong>${displayInput}`, 'reward', 'kick');
-
-                // Prepare args for Streamer.bot
-                const args = {
-                    kickRewardTitle: rewardTitle.trim(),
-                    kickUsername: username,
-                    kickUserInput: rewardData.user_input,
-                    kickUserId: rewardData.user_id,
-                    kickChannelId: rewardData.channel_id,
-                    kickAccount: account.name,
-                    kickAccountId: account.id
-                };
-
-                // Construct the action name dynamically based on the reward title (trim whitespace)
-                const actionName = `KickReward-${rewardTitle.trim()}`;
-
-                // Trigger the specific Streamer.bot action by name
-                sendToStreamerBot(actionName, args);
-            }
-            
-            // Chat message handler function
-            function handleChatMessage(account, data) {
-                const username = data.user.username;
-                const message = data.message.message;
-                
-                logEvent(`💬 [${account.name}] <strong>${username}</strong>: ${message}`, 'chat');
-
-                const args = {
-                    kickUsername: username,
-                    kickMessage: message,
-                    kickUserId: data.user.id,
-                    kickAccount: account.name,
-                    kickAccountId: account.id,
-                    isSubscribed: data.user.is_subscribed,
-                    monthsSubscribed: data.user.months_subscribed,
-                    badges: data.user.follower_badges?.join(', ') || ''
-                };
-
-                // Use shared action name for both accounts
-                const actionName = SB_ACTION_NAME_ON_CHAT;
-                sendToStreamerBot(actionName, args);
-            }
-
-            // All channel subscriptions now handled in the loop above
-
-            // Using public channels only - no private channel authentication needed
-            logEvent('📡 Using public channels only for event monitoring', 'info', 'kick');
-
-            // --- Initial Connection ---
-            logEvent('🚀 Starting bridge initialization...', 'info', 'system');
-            connectStreamerBot();
-            
-            // Initialize logging
-            logEvent('📝 Event logging system ready', 'success', 'system');
-            logEvent('🔧 Bridge ready for Kick events', 'success', 'system');
         }
-    </script>
+        const KICK_PUSHER_KEY = "32cbd69e4b950bf97679";
+        const KICK_PUSHER_CLUSTER = "us2";
+        const ACCOUNT = {
+            id: 1,
+            name: "KickUser",
+            chatroomId: chatroomId,
+            streamerId: chatroomId,
+            channels: {
+                chatroom_v2: `chatrooms.${chatroomId}.v2`,
+                chatroom: `chatroom_${chatroomId}`,
+                chatrooms: `chatrooms.${chatroomId}`
+            }
+        };
+        const SB_WEBSOCKET_IP = sbIp;
+        const SB_WEBSOCKET_PORT = sbPort;
+        const SB_WEBSOCKET_ENDPOINT = "/";
+        let sbSocket = null;
+        function connectStreamerBot() {
+            const wsUrl = `ws://${SB_WEBSOCKET_IP}:${SB_WEBSOCKET_PORT}${SB_WEBSOCKET_ENDPOINT}`;
+            try {
+                sbSocket = new WebSocket(wsUrl);
+                sbSocket.onopen = () => {
+                    sbConnected = true;
+                    updateStatus();
+                };
+                sbSocket.onerror = () => {
+                    sbConnected = false;
+                    updateStatus();
+                };
+                sbSocket.onclose = () => {
+                    sbConnected = false;
+                    updateStatus();
+                    setTimeout(connectStreamerBot, 5000);
+                };
+            } catch (error) {
+                sbConnected = false;
+                updateStatus();
+                setTimeout(connectStreamerBot, 5000);
+            }
+        }
+        const pusher = new Pusher(KICK_PUSHER_KEY, {
+            cluster: KICK_PUSHER_CLUSTER,
+            forceTLS: true
+        });
+        pusher.connection.bind('state_change', (states) => {
+            if (states.current === 'connected') {
+                kickConnected = true;
+            } else {
+                kickConnected = false;
+            }
+            updateStatus();
+        });
+        pusher.connection.bind('error', () => {
+            kickConnected = false;
+            updateStatus();
+        });
+        updateStatus();
+        connectStreamerBot();
+    }
+</script>
 </body>
 </html>
