@@ -13,25 +13,42 @@
             --border-radius: 14px;
         }
         html, body {
-            height: 100%;
             margin: 0;
             padding: 0;
+            height: 100%;
         }
         body {
             min-height: 100vh;
-            background: var(--bg-main);
+            background: linear-gradient(135deg, #10131a, #181c24);
             color: #e0e0e0;
-            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
         }
+        h1 {
+            color: var(--accent);
+            font-size: 1.8em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.3em;
+            letter-spacing: 0.8px;
+            text-shadow: 0 2px 6px rgba(0, 255, 195, 0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: #b2f7ef;
+            margin-top: -0.5em;
+            margin-bottom: 1em;
+            font-size: 0.95em;
+            opacity: 0.85;
+        }
         .main-row {
             display: flex;
             flex-direction: row;
             gap: 2.5em;
-            margin-top: 3.5em;
+            margin-top: 3em;
             margin-bottom: 1.5em;
             width: 100%;
             justify-content: center;
@@ -39,20 +56,19 @@
         .settings-row, .info-row {
             background: var(--bg-card);
             border-radius: var(--border-radius);
-            box-shadow: 0 4px 32px rgba(0,255,255,0.07);
+            border: 1px solid #23272f;
+            box-shadow: 0 4px 32px rgba(0, 255, 255, 0.07);
+            backdrop-filter: blur(6px);
             padding: 2.2em 2em 1.7em 2em;
             width: 100%;
             max-width: 370px;
-            min-width: 0;
             display: flex;
             flex-direction: column;
             gap: 1.2em;
+            transition: transform 0.2s;
         }
-        .info-row {
-            box-shadow: 0 2px 16px rgba(0,255,255,0.04);
-            color: #b2f7ef;
-            font-size: 1em;
-            margin: 0;
+        .settings-row:hover, .info-row:hover {
+            transform: translateY(-2px);
         }
         .info-row h2 {
             color: var(--accent);
@@ -68,17 +84,6 @@
             border-radius: 4px;
             font-size: 0.98em;
         }
-        h1 {
-            color: var(--accent);
-            font-size: 1.5em;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.7em;
-            letter-spacing: 0.5px;
-        }
-        .section {
-            margin-bottom: 1.1em;
-        }
         label {
             display: block;
             margin-bottom: 0.2em;
@@ -87,47 +92,47 @@
         }
         input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 0.7em;
-            border-radius: 8px;
-            border: 1.5px solid #23272f;
-            background: #181c24;
+            padding: 0.8em;
+            border-radius: 10px;
+            border: 2px solid #23272f;
+            background: #1b1f29;
             color: #e0e0e0;
             font-size: 1em;
             margin-bottom: 0.7em;
             margin-top: 0.1em;
             transition: border 0.2s, box-shadow 0.2s;
         }
-        input[type="text"]:focus, input[type="number"]:focus {
-            border: 1.5px solid var(--accent);
+        input:focus {
+            border: 2px solid var(--accent);
             outline: none;
-            box-shadow: 0 0 8px #00ffc344;
+            box-shadow: 0 0 10px #00ffc355;
         }
         button {
             background: var(--accent);
             color: #181c24;
             border: none;
-            padding: 0.7em 1.5em;
-            border-radius: 8px;
+            padding: 0.8em 1.7em;
+            border-radius: 10px;
             font-size: 1em;
             cursor: pointer;
             font-weight: 700;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-            margin-right: 0.5em;
-            margin-top: 0.2em;
-            box-shadow: 0 2px 12px #00ffc344;
+            transition: transform 0.15s ease, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px #00ffc366;
         }
         button:hover {
             background: #00bfff;
             color: #fff;
+            transform: translateY(-2px);
         }
-        .result {
+        .result, .url-box {
             margin-top: 0.3em;
-            background: #151922;
+            background: #1b1f29;
             padding: 0.7em 1em;
             border-radius: 8px;
             font-size: 1em;
-            word-break: break-all;
+            word-break: break-word;
             border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 255, 195, 0.15);
         }
         .error {
             color: #ff6b6b;
@@ -135,22 +140,19 @@
             min-height: 1.2em;
             font-size: 1em;
         }
-        .url-box {
-            margin-top: 0.7em;
-            background: #151922;
-            padding: 0.7em 1em;
-            border-radius: 6px;
-            border: 1.5px solid var(--accent);
-            font-size: 1em;
-            word-break: break-all;
+        hr {
+            border: none;
+            border-top: 1px solid #23272f;
+            margin: 1em 0;
+            opacity: 0.5;
         }
         .footer {
-            margin-top: 1.5em;
+            margin-top: 2em;
             text-align: center;
             color: var(--accent);
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: 600;
-            opacity: 0.85;
+            opacity: 0.7;
         }
         .footer a {
             color: #00bfff;
@@ -169,61 +171,81 @@
                 gap: 1.5em;
                 margin-top: 2em;
             }
-            .settings-row, .info-row {
-                max-width: 98vw;
-                padding: 1.2em 0.5em 1em 0.5em;
+            h1 {
+                font-size: 1.4em;
+            }
+            button {
+                font-size: 0.95em;
             }
         }
     </style>
 </head>
 <body>
+    <h1>Kick ➔ Streamer.bot Bridge</h1>
+    <p class="subtitle">Simple Kick Chat + Rewards Bridge</p>
+
     <div class="main-row">
         <div class="settings-row">
-            <h1>Kick-> Streamerbot | Bridge Settings</h1>
-            <div class="section">
-                <label for="kick-username">Kick Username</label>
-                <input type="text" id="kick-username" placeholder="e.g. mykickusername" autocomplete="off" />
-                <button onclick="fetchChatroomId()">Fetch Chatroom ID</button>
-                <div id="kick-result" class="result" style="display:none;"></div>
-            </div>
-            <div class="section">
-                <label for="sb-ip">Streamer.bot IP</label>
-                <input type="text" id="sb-ip" placeholder="127.0.0.1" />
-                <label for="sb-port">Streamer.bot Port</label>
-                <input type="number" id="sb-port" placeholder="8080" min="1" max="65535" />
-            </div>
-            <div class="section">
-                <label for="reward-prefix">Reward Action Prefix</label>
-                <input type="text" id="reward-prefix" placeholder="KickReward-" />
-            </div>
-            <div class="section" style="display:flex;flex-wrap:wrap;gap:0.7em 0.7em;align-items:center;justify-content:center;">
+            <label for="kick-username">Kick Username</label>
+            <input type="text" id="kick-username" placeholder="e.g. mykickusername" autocomplete="off" />
+            <button onclick="fetchChatroomId()">Fetch Chatroom ID</button>
+            <div id="kick-result" class="result" style="display:none;"></div>
+
+            <hr>
+
+            <label for="sb-ip">Streamer.bot IP</label>
+            <input type="text" id="sb-ip" placeholder="127.0.0.1" />
+            <label for="sb-port">Streamer.bot Port</label>
+            <input type="number" id="sb-port" placeholder="8080" min="1" max="65535" />
+
+            <hr>
+
+            <label for="reward-prefix">Reward Action Prefix</label>
+            <input type="text" id="reward-prefix" placeholder="KickReward-" />
+
+            <div style="display:flex; flex-wrap:wrap; gap:0.7em; align-items:center; justify-content:center; margin-top:1em;">
                 <button onclick="saveSettings()">Save Settings</button>
-                <button class="copy-btn" onclick="copyBridgeUrl()">Copy Bridge URL</button>
             </div>
+
             <div id="url" class="url-box" style="display:none;"></div>
             <div id="error" class="error"></div>
         </div>
+
         <div class="info-row">
-            <h2>How to use Reward Action Prefix</h2>
-            <ul style="margin-top:0.5em;margin-bottom:1.2em;padding-left:1.2em;">
-                <li>The <b>Reward Action Prefix</b> is used to generate Streamer.bot action names for Kick rewards.</li>
-                <li>For example, if the prefix is <code>KickReward-</code> and the reward title is <code>Shoutout</code>, the action name will be <code>KickReward-Shoutout</code>.</li>
-                <li>You can change the prefix to match your own Streamer.bot action naming scheme.</li>
+            <h2>Using Reward Action Prefix</h2>
+            <ul>
+                <li>The <b>Reward Action Prefix</b> sets your Streamer.bot action names for Kick rewards.</li>
+                <li>Example: If prefix is <code class="reward-prefix-example">KickReward-</code> and reward title is <code class="reward-title-example">Shoutout</code>, action is <code class="action-name-example">KickReward-Shoutout</code>.</li>
+                <li>Customize it to match your action names.</li>
             </ul>
-            <h2>How to use in OBS</h2>
-            <ul style="margin-top:0.5em;padding-left:1.2em;">
-                <li>Fill in your Kick username and Streamer.bot details, then click <b>Save Settings</b>.</li>
-                <li>Click <b>Copy Bridge URL</b> to copy your personalized URL.</li>
-                <li>In OBS, add a new <b>Browser Source</b> and paste the copied URL.</li>
-                <li>The bridge will connect your Kick chat and rewards to Streamer.bot using your settings.</li>
+
+            <hr>
+
+            <h2>Using in OBS</h2>
+            <ul>
+                <li>Enter your Kick username and Streamer.bot details, then click <b>Save Settings</b>.</li>
+                <li>Copy your personalized URL with <b>Copy Bridge URL</b>.</li>
+                <li>Add a <b>Browser Source</b> in OBS with the copied URL.</li>
+                <li>The bridge will sync your Kick chat and rewards to Streamer.bot.</li>
             </ul>
         </div>
     </div>
+
     <div class="footer">
-        &copy; 2024 ichrisirl &mdash;
+        &copy; 2024 ichrisirl —
         <a href="https://discord.gg/ichrisirl" target="_blank" rel="noopener">Join my Discord</a>
     </div>
+
     <script>
+        function updateRewardPrefixHowTo() {
+            let rewardPrefix = document.getElementById('reward-prefix').value || 'KickReward-';
+            rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+            const rewardTitle = 'Shoutout';
+            document.querySelectorAll('.reward-prefix-example').forEach(span => span.textContent = rewardPrefix);
+            document.querySelectorAll('.reward-title-example').forEach(span => span.textContent = rewardTitle);
+            document.querySelectorAll('.action-name-example').forEach(span => span.textContent = rewardPrefix + rewardTitle);
+        }
         window.onload = function() {
             const saved = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
             document.getElementById('kick-username').value = saved.kickUsername || '';
@@ -234,7 +256,9 @@
                 document.getElementById('kick-result').innerHTML = `<strong>Chatroom ID:</strong> <code>${saved.chatroomId}</code>`;
                 document.getElementById('kick-result').style.display = 'block';
             }
+            updateRewardPrefixHowTo();
         };
+        document.getElementById('reward-prefix').addEventListener('input', updateRewardPrefixHowTo);
         async function fetchChatroomId() {
             const username = document.getElementById('kick-username').value.trim();
             const resultDiv = document.getElementById('kick-result');
@@ -265,6 +289,47 @@
                 errorDiv.textContent = err.message;
             }
         }
+        function showBridgeUrl() {
+            const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+            const sbIp = settings.sbIp || '127.0.0.1';
+            const sbPort = settings.sbPort || '8080';
+            let rewardPrefix = settings.rewardPrefix || 'KickReward-';
+            if (!settings.chatroomId) {
+                document.getElementById('url').style.display = 'none';
+                return;
+            }
+            rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+            let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
+            if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
+            if (sbPort !== '8080') url += `&sbport=${sbPort}`;
+            if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
+            document.getElementById('url').innerHTML = `
+                <label for="bridge-url-input" style="font-weight:600;">Bridge URL:</label>
+                <textarea id="bridge-url-input" readonly rows="2" style="display:block;width:100%;min-width:320px;max-width:100vw;padding:0.5em 0.7em;margin-top:0.3em;border-radius:6px;border:1.5px solid var(--accent);background:#181c24;color:#e0e0e0;font-size:1em;user-select:all;outline:none;overflow-x:auto;resize:vertical;word-break:break-all;">${url}</textarea>
+                <div style="margin-top:0.5em;display:flex;align-items:center;gap:0.5em;">
+                    <button id="copy-url-btn" title="Copy URL" style="background:var(--accent);color:#181c24;border:none;padding:0.5em 1.2em;border-radius:6px;font-size:1em;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;gap:0.4em;min-width:90px;">
+                        <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13' rx='2' stroke='#181c24' stroke-width='2' fill='none'/><rect x='3' y='3' width='13' height='13' rx='2' stroke='#181c24' stroke-width='2' fill='none'/></svg>
+                        Copy
+                    </button>
+                    <span id="copy-url-confirm" style="color:var(--accent);font-size:1em;font-weight:600;display:none;">Bridge URL copied!</span>
+                </div>
+            `;
+            document.getElementById('url').style.display = 'block';
+            setTimeout(() => {
+                const urlInput = document.getElementById('bridge-url-input');
+                const copyBtn = document.getElementById('copy-url-btn');
+                const confirmMsg = document.getElementById('copy-url-confirm');
+                function doCopy() {
+                    urlInput.select();
+                    navigator.clipboard.writeText(urlInput.value);
+                    confirmMsg.style.display = 'block';
+                    setTimeout(() => { confirmMsg.style.display = 'none'; }, 1500);
+                }
+                if (urlInput) urlInput.onclick = () => urlInput.select();
+                if (copyBtn) copyBtn.onclick = doCopy;
+            }, 0);
+        }
         function saveSettings() {
             const username = document.getElementById('kick-username').value.trim();
             const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
@@ -278,27 +343,7 @@
             localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
             document.getElementById('error').textContent = 'Settings saved!';
             setTimeout(() => { document.getElementById('error').textContent = ''; }, 1500);
-        }
-        function copyBridgeUrl() {
-            const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
-            const sbIp = settings.sbIp || '127.0.0.1';
-            const sbPort = settings.sbPort || '8080';
-            let rewardPrefix = settings.rewardPrefix || 'KickReward-';
-            if (!settings.chatroomId) {
-                document.getElementById('error').textContent = 'Please set all settings and fetch Chatroom ID first.';
-                return;
-            }
-            // Replace underscores with dashes in the prefix and ensure it ends with a dash
-            rewardPrefix = rewardPrefix.replace(/_/g, '-');
-            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
-            // Always include all parameters, even if default
-            let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}&sbip=${encodeURIComponent(sbIp)}&sbport=${sbPort}`;
-            if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
-            navigator.clipboard.writeText(url);
-            document.getElementById('url').innerHTML = `<strong>Bridge URL:</strong> <code>${url}</code>`;
-            document.getElementById('url').style.display = 'block';
-            document.getElementById('error').textContent = 'Bridge URL copied!';
-            setTimeout(() => { document.getElementById('error').textContent = ''; }, 1500);
+            showBridgeUrl();
         }
     </script>
 </body>
