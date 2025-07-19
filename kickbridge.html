@@ -420,13 +420,39 @@
             cluster: KICK_PUSHER_CLUSTER,
             forceTLS: true
         });
-        pusher.connection.bind('state_change', (states) => {
-            if (states.current === 'connected') {
+        // Subscribe to all relevant chatroom channels to verify actual chatroom connection
+        let chatroomSubs = [];
+        let chatroomSuccess = 0;
+        let chatroomFail = 0;
+        function updateKickConnected() {
+            if (chatroomSuccess > 0) {
                 kickConnected = true;
             } else {
                 kickConnected = false;
             }
             updateStatus();
+        }
+        function bindChatroomSub(channelName) {
+            const ch = pusher.subscribe(channelName);
+            chatroomSubs.push(ch);
+            ch.bind('pusher:subscription_succeeded', () => {
+                chatroomSuccess++;
+                updateKickConnected();
+            });
+            ch.bind('pusher:subscription_error', () => {
+                chatroomFail++;
+                updateKickConnected();
+            });
+        }
+        bindChatroomSub(ACCOUNT.channels.chatroomv2);
+        bindChatroomSub(ACCOUNT.channels.chatroom);
+        bindChatroomSub(ACCOUNT.channels.chatrooms);
+        pusher.connection.bind('state_change', (states) => {
+            // Still update on general connection state, but rely on chatroom subscription for true status
+            if (states.current !== 'connected') {
+                kickConnected = false;
+                updateStatus();
+            }
         });
         pusher.connection.bind('error', () => {
             kickConnected = false;
@@ -434,6 +460,53 @@
         });
         updateStatus();
         connectStreamerBot();
+
+        // Reward event handler
+        function handleRewardRedemption(data) {
+            let rewardData = null;
+            if (typeof data === 'string') {
+                try {
+                    rewardData = JSON.parse(data);
+                } catch (e) {
+                    return;
+                }
+            } else if (typeof data === 'object' && data !== null) {
+                rewardData = data;
+            } else {
+                return;
+            }
+            if (!rewardData || typeof rewardData !== 'object') return;
+            const rewardTitle = rewardData.reward_title;
+            const username = rewardData.username;
+            const userInput = rewardData.user_input;
+            // Prepare args for Streamer.bot
+            const args = {
+                kickRewardTitle: rewardTitle ? rewardTitle.trim() : '',
+                kickUsername: username,
+                kickUserInput: userInput,
+                kickUserId: rewardData.user_id,
+                kickChannelId: rewardData.channel_id
+            };
+            // Construct the action name dynamically based on the reward title (trim whitespace)
+            const actionName = `KickReward-${rewardTitle ? rewardTitle.trim() : ''}`;
+            // Trigger the specific Streamer.bot action by name
+            if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
+                const request = {
+                    request: "DoAction",
+                    action: { name: actionName },
+                    args: args,
+                    id: `kick-${Date.now()}`
+                };
+                sbSocket.send(JSON.stringify(request));
+            } else {
+                showStatus('Not connected to Streamer.bot (reward not sent)');
+            }
+        }
+        // Subscribe to reward events on all chatroom channels
+        function bindRewardEvents(channel) {
+            channel.bind('RewardRedeemedEvent', handleRewardRedemption);
+        }
+        chatroomSubs.forEach(bindRewardEvents);
     }
 </script>
 </body>

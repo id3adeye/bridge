@@ -283,14 +283,16 @@
             const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
             const sbIp = settings.sbIp || '127.0.0.1';
             const sbPort = settings.sbPort || '8080';
-            const rewardPrefix = settings.rewardPrefix || 'KickReward-';
+            let rewardPrefix = settings.rewardPrefix || 'KickReward-';
             if (!settings.chatroomId) {
                 document.getElementById('error').textContent = 'Please set all settings and fetch Chatroom ID first.';
                 return;
             }
-            let url = `${window.location.origin}/bridge/kickbridge.html?chatroom_id=${settings.chatroomId}`;
-            if (sbIp !== '127.0.0.1') url += `&sb_ip=${encodeURIComponent(sbIp)}`;
-            if (sbPort !== '8080') url += `&sb_port=${sbPort}`;
+            // Replace underscores with dashes in the prefix
+            rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
+            if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
+            if (sbPort !== '8080') url += `&sbport=${sbPort}`;
             if (rewardPrefix !== 'KickReward-') url += `&reward_prefix=${encodeURIComponent(rewardPrefix)}`;
             navigator.clipboard.writeText(url);
             document.getElementById('url').innerHTML = `<strong>Bridge URL:</strong> <code>${url}</code>`;
