@@ -358,8 +358,9 @@
     }
     // Use 'chatroomid' as the main query parameter for the chatroom ID
     const chatroomId = getQueryParam('chatroomid');
-    const sbIp = getQueryParam('sbip') || getSetting('sb_ip');
-    const sbPort = getQueryParam('sbport') || getSetting('sb_port');
+    // Use defaults if sbip or sbport are missing
+    const sbIp = getQueryParam('sbip') || '127.0.0.1';
+    const sbPort = getQueryParam('sbport') || '8080';
     if (!chatroomId || !sbIp || !sbPort) {
         showStatus('Not connected: Missing settings');
     } else {
@@ -393,24 +394,34 @@
         const SB_WEBSOCKET_PORT = sbPort;
         const SB_WEBSOCKET_ENDPOINT = "/";
         let sbSocket = null;
+        // Get reward prefix from URL (default to 'KickReward-'), ensure it ends with a dash and has no underscores
+        let rewardPrefix = getQueryParam('rewardprefix') || 'KickReward-';
+        rewardPrefix = rewardPrefix.replace(/_/g, '-');
+        if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+        // Debug: Log Streamer.bot connection state
         function connectStreamerBot() {
             const wsUrl = `ws://${SB_WEBSOCKET_IP}:${SB_WEBSOCKET_PORT}${SB_WEBSOCKET_ENDPOINT}`;
+            console.log('[Streamer.bot] Connecting to:', wsUrl);
             try {
                 sbSocket = new WebSocket(wsUrl);
                 sbSocket.onopen = () => {
+                    console.log('[Streamer.bot] Connected');
                     sbConnected = true;
                     updateStatus();
                 };
-                sbSocket.onerror = () => {
+                sbSocket.onerror = (e) => {
+                    console.log('[Streamer.bot] Connection error', e);
                     sbConnected = false;
                     updateStatus();
                 };
-                sbSocket.onclose = () => {
+                sbSocket.onclose = (e) => {
+                    console.log('[Streamer.bot] Disconnected', e);
                     sbConnected = false;
                     updateStatus();
                     setTimeout(connectStreamerBot, 5000);
                 };
             } catch (error) {
+                console.log('[Streamer.bot] Failed to create connection', error);
                 sbConnected = false;
                 updateStatus();
                 setTimeout(connectStreamerBot, 5000);
@@ -432,14 +443,17 @@
             }
             updateStatus();
         }
+        // Debug: Log chatroom subscription events
         function bindChatroomSub(channelName) {
             const ch = pusher.subscribe(channelName);
             chatroomSubs.push(ch);
             ch.bind('pusher:subscription_succeeded', () => {
+                console.log(`[Kick] Subscribed to ${channelName}`);
                 chatroomSuccess++;
                 updateKickConnected();
             });
             ch.bind('pusher:subscription_error', () => {
+                console.log(`[Kick] Subscription error for ${channelName}`);
                 chatroomFail++;
                 updateKickConnected();
             });
@@ -447,22 +461,24 @@
         bindChatroomSub(ACCOUNT.channels.chatroomv2);
         bindChatroomSub(ACCOUNT.channels.chatroom);
         bindChatroomSub(ACCOUNT.channels.chatrooms);
+        // Debug: Log Pusher connection state
         pusher.connection.bind('state_change', (states) => {
+            console.log('[Kick] Pusher state change:', states);
             // Still update on general connection state, but rely on chatroom subscription for true status
             if (states.current !== 'connected') {
                 kickConnected = false;
                 updateStatus();
             }
         });
-        pusher.connection.bind('error', () => {
+        pusher.connection.bind('error', (err) => {
+            console.log('[Kick] Pusher error:', err);
             kickConnected = false;
             updateStatus();
         });
         updateStatus();
         connectStreamerBot();
 
-        // Get reward prefix from URL (default to 'KickReward-')
-        const rewardPrefix = getQueryParam('rewardprefix') || 'KickReward-';
+        // Debug: Log reward events
         // Reward event handler
         function handleRewardRedemption(data) {
             let rewardData = null;
@@ -470,6 +486,7 @@
                 try {
                     rewardData = JSON.parse(data);
                 } catch (e) {
+                    console.log('[Kick] Failed to parse reward data', data);
                     return;
                 }
             } else if (typeof data === 'object' && data !== null) {
@@ -478,21 +495,26 @@
                 return;
             }
             if (!rewardData || typeof rewardData !== 'object') return;
-            const rewardTitle = rewardData.reward_title;
+            let rewardTitle = rewardData.reward_title || '';
+            rewardTitle = rewardTitle.trim();
+            // Remove leading dashes from rewardTitle to avoid double dash
+            rewardTitle = rewardTitle.replace(/^[-]+/, '');
             const username = rewardData.username;
             const userInput = rewardData.user_input;
+            console.log('[Kick] Reward redeemed:', rewardData);
             // Prepare args for Streamer.bot
             const args = {
-                kickRewardTitle: rewardTitle ? rewardTitle.trim() : '',
+                kickRewardTitle: rewardTitle,
                 kickUsername: username,
                 kickUserInput: userInput,
                 kickUserId: rewardData.user_id,
                 kickChannelId: rewardData.channel_id
             };
-            // Construct the action name dynamically based on the reward title (trim whitespace)
-            const actionName = `${rewardPrefix}${rewardTitle ? rewardTitle.trim() : ''}`;
+            // Construct the action name: always <prefix>-<RewardTitle> (single dash)
+            const actionName = `${rewardPrefix}${rewardTitle}`;
             // Trigger the specific Streamer.bot action by name
             if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
+                console.log('[Streamer.bot] Sending action:', actionName, args);
                 const request = {
                     request: "DoAction",
                     action: { name: actionName },
@@ -501,6 +523,7 @@
                 };
                 sbSocket.send(JSON.stringify(request));
             } else {
+                console.log('[Streamer.bot] Not connected (reward not sent)');
                 showStatus('Not connected to Streamer.bot (reward not sent)');
             }
         }

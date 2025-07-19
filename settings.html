@@ -288,8 +288,9 @@
                 document.getElementById('error').textContent = 'Please set all settings and fetch Chatroom ID first.';
                 return;
             }
-            // Replace underscores with dashes in the prefix
+            // Replace underscores with dashes in the prefix and ensure it ends with a dash
             rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
             // Always include all parameters, even if default
             let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}&sbip=${encodeURIComponent(sbIp)}&sbport=${sbPort}`;
             if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
