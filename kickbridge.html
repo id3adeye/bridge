@@ -461,6 +461,8 @@
         updateStatus();
         connectStreamerBot();
 
+        // Get reward prefix from URL (default to 'KickReward-')
+        const rewardPrefix = getQueryParam('rewardprefix') || 'KickReward-';
         // Reward event handler
         function handleRewardRedemption(data) {
             let rewardData = null;
@@ -488,7 +490,7 @@
                 kickChannelId: rewardData.channel_id
             };
             // Construct the action name dynamically based on the reward title (trim whitespace)
-            const actionName = `KickReward-${rewardTitle ? rewardTitle.trim() : ''}`;
+            const actionName = `${rewardPrefix}${rewardTitle ? rewardTitle.trim() : ''}`;
             // Trigger the specific Streamer.bot action by name
             if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
                 const request = {

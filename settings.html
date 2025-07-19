@@ -290,10 +290,9 @@
             }
             // Replace underscores with dashes in the prefix
             rewardPrefix = rewardPrefix.replace(/_/g, '-');
-            let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
-            if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
-            if (sbPort !== '8080') url += `&sbport=${sbPort}`;
-            if (rewardPrefix !== 'KickReward-') url += `&reward_prefix=${encodeURIComponent(rewardPrefix)}`;
+            // Always include all parameters, even if default
+            let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}&sbip=${encodeURIComponent(sbIp)}&sbport=${sbPort}`;
+            if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
             navigator.clipboard.writeText(url);
             document.getElementById('url').innerHTML = `<strong>Bridge URL:</strong> <code>${url}</code>`;
             document.getElementById('url').style.display = 'block';
