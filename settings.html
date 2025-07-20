@@ -3,237 +3,598 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick Bridge Settings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Kick Bridge Dashboard | ICHRISIRL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --accent: #00ffc3;
-            --bg-main: #10131a;
-            --bg-card: #181c24;
-            --border-radius: 14px;
+            --primary-brand: #00ffc3;
+            --secondary-brand: #00bfff;
+            --bg-primary: #0a0d14;
+            --bg-secondary: #151922;
+            --bg-card: #1a1f28;
+            --bg-elevated: #212732;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c5d1;
+            --text-muted: #8b9bb3;
+            --border: #2a3441;
+            --border-hover: #3a4451;
+            --success: #00ffc3;
+            --error: #ff4757;
+            --warning: #ffa502;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 20px rgba(0, 255, 195, 0.2);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        html, body {
+        
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
+            box-sizing: border-box;
         }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #10131a, #181c24);
-            color: #e0e0e0;
-            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 255, 195, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .dashboard-container {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 255, 195, 0.05) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .brand-logo {
+            display: inline-flex;
             align-items: center;
-            justify-content: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
-        h1 {
-            color: var(--accent);
-            font-size: 1.8em;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.3em;
-            letter-spacing: 0.8px;
-            text-shadow: 0 2px 6px rgba(0, 255, 195, 0.3);
-        }
-        .subtitle {
-            text-align: center;
-            color: #b2f7ef;
-            margin-top: -0.5em;
-            margin-bottom: 1em;
-            font-size: 0.95em;
-            opacity: 0.85;
-        }
-        .main-row {
+        
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-brand), var(--secondary-brand));
+            border-radius: var(--radius-md);
             display: flex;
-            flex-direction: row;
-            gap: 2.5em;
-            margin-top: 3em;
-            margin-bottom: 1.5em;
-            width: 100%;
+            align-items: center;
             justify-content: center;
+            font-size: 1.5rem;
+            color: var(--bg-primary);
+            font-weight: 800;
+            box-shadow: var(--shadow-glow);
         }
-        .settings-row, .info-row {
+        
+        .brand-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-brand), var(--secondary-brand));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.025em;
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
             background: var(--bg-card);
-            border-radius: var(--border-radius);
-            border: 1px solid #23272f;
-            box-shadow: 0 4px 32px rgba(0, 255, 255, 0.07);
-            backdrop-filter: blur(6px);
-            padding: 2.2em 2em 1.7em 2em;
-            width: 100%;
-            max-width: 370px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-brand), var(--secondary-brand));
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
             display: flex;
-            flex-direction: column;
-            gap: 1.2em;
-            transition: transform 0.2s;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
         }
-        .settings-row:hover, .info-row:hover {
-            transform: translateY(-2px);
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-brand), var(--secondary-brand));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
         }
-        .info-row h2 {
-            color: var(--accent);
-            font-size: 1.1em;
-            margin-top: 0;
-            margin-bottom: 0.5em;
-            font-weight: 700;
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
-        .info-row code {
-            background: #10131a;
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.98em;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
-        label {
+        
+        .form-label {
             display: block;
-            margin-bottom: 0.2em;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            font-size: 1em;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        input[type="text"], input[type="number"] {
+        
+        .form-input {
             width: 100%;
-            padding: 0.8em;
-            border-radius: 10px;
-            border: 2px solid #23272f;
-            background: #1b1f29;
-            color: #e0e0e0;
-            font-size: 1em;
-            margin-bottom: 0.7em;
-            margin-top: 0.1em;
-            transition: border 0.2s, box-shadow 0.2s;
+            padding: 0.875rem 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
         }
-        input:focus {
-            border: 2px solid var(--accent);
+        
+        .form-input:focus {
             outline: none;
-            box-shadow: 0 0 10px #00ffc355;
+            border-color: var(--primary-brand);
+            box-shadow: 0 0 0 3px rgba(0, 255, 195, 0.1);
         }
-        button {
-            background: var(--accent);
-            color: #181c24;
+        
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-sm);
             border: none;
-            padding: 0.8em 1.7em;
-            border-radius: 10px;
-            font-size: 1em;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
             cursor: pointer;
-            font-weight: 700;
-            transition: transform 0.15s ease, background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 16px #00ffc366;
+            transition: var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
         }
-        button:hover {
-            background: #00bfff;
-            color: #fff;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-brand), var(--secondary-brand));
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
-        .result, .url-box {
-            margin-top: 0.3em;
-            background: #1b1f29;
-            padding: 0.7em 1em;
-            border-radius: 8px;
-            font-size: 1em;
-            word-break: break-word;
-            border-left: 4px solid var(--accent);
-            box-shadow: 0 2px 8px rgba(0, 255, 195, 0.15);
+        
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
         }
-        .error {
-            color: #ff6b6b;
-            margin-top: 0.5em;
-            min-height: 1.2em;
-            font-size: 1em;
+        
+        .btn-secondary:hover {
+            background: var(--border-hover);
+            border-color: var(--border-hover);
         }
-        hr {
-            border: none;
-            border-top: 1px solid #23272f;
-            margin: 1em 0;
-            opacity: 0.5;
+        
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.5rem 0;
+            opacity: 0.6;
+        }
+        
+        .code-block {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--primary-brand);
+            word-break: break-all;
+        }
+        .result-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--success);
+            background: var(--bg-elevated);
+            font-size: 0.875rem;
+        }
+        
+        .result-box.hidden {
+            display: none;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .url-output {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            margin-top: 1rem;
+            word-break: break-all;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .url-textarea {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            color: var(--text-primary);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .status-message {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: rgba(0, 255, 195, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .status-error {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
         }
         .footer {
-            margin-top: 2em;
+            margin-top: auto;
+            padding: 2rem;
             text-align: center;
-            color: var(--accent);
-            font-size: 0.95em;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+        
+        .footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             font-weight: 600;
-            opacity: 0.7;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
         }
-        .footer a {
-            color: #00bfff;
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .footer-link {
+            color: var(--text-muted);
             text-decoration: none;
-            font-weight: 700;
-            margin-left: 0.5em;
-            transition: color 0.2s;
+            font-size: 0.875rem;
+            transition: var(--transition);
         }
-        .footer a:hover {
-            color: var(--accent);
-            text-decoration: underline;
+        
+        .footer-link:hover {
+            color: var(--primary-brand);
         }
-        @media (max-width: 900px) {
-            .main-row {
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 2rem 1rem 1.5rem;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .brand-text {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .btn-group {
                 flex-direction: column;
-                gap: 1.5em;
-                margin-top: 2em;
             }
-            h1 {
-                font-size: 1.4em;
+            
+            .btn {
+                justify-content: center;
             }
-            button {
-                font-size: 0.95em;
+        }
+        
+        @media (max-width: 480px) {
+            .brand-logo {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .main-title {
+                font-size: 1.75rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.75rem;
             }
         }
     </style>
 </head>
 <body>
-    <h1>Kick ➔ Streamer.bot Bridge</h1>
-    <p class="subtitle">Simple Kick Chat + Rewards Bridge</p>
-
-    <div class="main-row">
-        <div class="settings-row">
-            <label for="kick-username">Kick Username</label>
-            <input type="text" id="kick-username" placeholder="e.g. mykickusername" autocomplete="off" />
-            <button onclick="fetchChatroomId()">Fetch Chatroom ID</button>
-            <div id="kick-result" class="result" style="display:none;"></div>
-
-            <hr>
-
-            <label for="sb-ip">Streamer.bot IP</label>
-            <input type="text" id="sb-ip" placeholder="127.0.0.1" />
-            <label for="sb-port">Streamer.bot Port</label>
-            <input type="number" id="sb-port" placeholder="8080" min="1" max="65535" />
-
-            <hr>
-
-            <label for="reward-prefix">Reward Action Prefix</label>
-            <input type="text" id="reward-prefix" placeholder="KickReward-" />
-
-            <div style="display:flex; flex-wrap:wrap; gap:0.7em; align-items:center; justify-content:center; margin-top:1em;">
-                <button onclick="saveSettings()">Save Settings</button>
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="brand-text">ICHRISIRL</div>
             </div>
+            <h1 class="main-title">Kick Bridge Dashboard</h1>
+            <p class="subtitle">Professional streaming integration for Kick rewards to Streamer.bot</p>
+        </header>
 
-            <div id="url" class="url-box" style="display:none;"></div>
-            <div id="error" class="error"></div>
-        </div>
+        <main class="main-content">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h2 class="card-title">Bridge Configuration</h2>
+                    </div>
 
-        <div class="info-row">
-            <h2>Using Reward Action Prefix</h2>
-            <ul>
-                <li>The <b>Reward Action Prefix</b> sets your Streamer.bot action names for Kick rewards.</li>
-                <li>Example: If prefix is <code class="reward-prefix-example">KickReward-</code> and reward title is <code class="reward-title-example">Shoutout</code>, action is <code class="action-name-example">KickReward-Shoutout</code>.</li>
-                <li>Customize it to match your action names.</li>
-            </ul>
+                    <div class="form-group">
+                        <label class="form-label" for="kick-username">Kick Username</label>
+                        <input type="text" id="kick-username" class="form-input" placeholder="e.g. mykickusername" autocomplete="off" />
+                        <button class="btn btn-secondary" onclick="fetchChatroomId()">
+                            <i class="fas fa-search"></i>
+                            Fetch Chatroom ID
+                        </button>
+                        <div id="kick-result" class="result-box hidden"></div>
+                    </div>
 
-            <hr>
+                    <div class="divider"></div>
 
-            <h2>Using in OBS</h2>
-            <ul>
-                <li>Enter your Kick username and Streamer.bot details, then click <b>Save Settings</b>.</li>
-                <li>Copy your personalized URL with <b>Copy Bridge URL</b>.</li>
-                <li>Add a <b>Browser Source</b> in OBS with the copied URL.</li>
-                <li>The bridge will sync your Kick chat and rewards to Streamer.bot.</li>
-            </ul>
-        </div>
-    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sb-ip">Streamer.bot IP Address</label>
+                        <input type="text" id="sb-ip" class="form-input" placeholder="127.0.0.1" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="sb-port">Streamer.bot Port</label>
+                        <input type="number" id="sb-port" class="form-input" placeholder="8080" min="1" max="65535" />
+                    </div>
 
-    <div class="footer">
-        &copy; 2024 ichrisirl —
-        <a href="https://discord.gg/ichrisirl" target="_blank" rel="noopener">Join my Discord</a>
+                    <div class="divider"></div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="reward-prefix">Reward Action Prefix</label>
+                        <input type="text" id="reward-prefix" class="form-input" placeholder="KickReward-" />
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            <i class="fas fa-save"></i>
+                            Save Configuration
+                        </button>
+                    </div>
+
+                    <div id="url" class="url-output" style="display:none;"></div>
+                    <div id="error" class="status-message"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h2 class="card-title">Setup Guide</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Reward Action Prefix</h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">Sets your Streamer.bot action names for Kick rewards</li>
+                            <li style="margin-bottom: 1rem;">Example: Prefix <span class="code-block reward-prefix-example" style="display: inline; padding: 0.125rem 0.375rem;">KickReward-</span> + reward <span class="code-block reward-title-example" style="display: inline; padding: 0.125rem 0.375rem;">Shoutout</span> = action:</li>
+                        </ul>
+                        <div style="background: var(--bg-primary); border: 2px solid var(--primary-brand); border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0; text-align: center; box-shadow: var(--shadow-glow);">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">ACTION NAME</div>
+                            <div class="action-name-example" style="font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 1.125rem; font-weight: 700; color: var(--primary-brand); letter-spacing: 0.05em;">KickReward-Shoutout</div>
+                        </div>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
+                            <li>Customize to match your existing action names</li>
+                        </ul>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">OBS Integration</h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">Configure your Kick username and Streamer.bot settings</li>
+                            <li style="margin-bottom: 0.5rem;">Click "Save Configuration" to generate your bridge URL</li>
+                            <li style="margin-bottom: 0.5rem;">Add a Browser Source in OBS with the generated URL</li>
+                            <li>Bridge automatically syncs Kick chat and rewards to Streamer.bot</li>
+                        </ul>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Streamer.bot Variables</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When a Kick reward is triggered, these variables are passed to your Streamer.bot action:</p>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickRewardTitle</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Reward name</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUsername</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">User who redeemed</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUserInput</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">User's text input</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUserId</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">User ID number</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickChannelId</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Channel ID number</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-brand">
+                <i class="fas fa-code"></i>
+                <span>&copy; 2024 ICHRISIRL</span>
+            </div>
+            <div class="footer-links">
+                <a href="https://ichrisirl.wtf/discord" target="_blank" rel="noopener" class="footer-link">
+                    <i class="fab fa-discord"></i>
+                    Discord
+                </a>
+                <a href="https://kick.com/ichrisirl" target="_blank" rel="noopener" class="footer-link">
+                    <i class="fas fa-play"></i>
+                    Kick
+                </a>
+                <a href="https://x.com/ichrisirl" target="_blank" rel="noopener" class="footer-link">
+                    <i class="fab fa-x-twitter"></i>
+                    X
+                </a>
+                <a href="https://ichrisirl.wtf" target="_blank" rel="noopener" class="footer-link">
+                    <i class="fas fa-globe"></i>
+                    Website
+                </a>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -252,9 +613,15 @@
             document.getElementById('sb-ip').value = saved.sbIp || '127.0.0.1';
             document.getElementById('sb-port').value = saved.sbPort || '8080';
             document.getElementById('reward-prefix').value = saved.rewardPrefix || 'KickReward-';
+            
             if (saved.chatroomId) {
-                document.getElementById('kick-result').innerHTML = `<strong>Chatroom ID:</strong> <code>${saved.chatroomId}</code>`;
-                document.getElementById('kick-result').style.display = 'block';
+                const resultDiv = document.getElementById('kick-result');
+                resultDiv.innerHTML = `
+                    <div class="result-label">Chatroom ID Found</div>
+                    <div class="code-block">${saved.chatroomId}</div>
+                `;
+                resultDiv.classList.remove('hidden');
+                showBridgeUrl();
             }
             updateRewardPrefixHowTo();
         };
@@ -263,71 +630,98 @@
             const username = document.getElementById('kick-username').value.trim();
             const resultDiv = document.getElementById('kick-result');
             const errorDiv = document.getElementById('error');
-            resultDiv.style.display = 'none';
+            
+            resultDiv.classList.add('hidden');
             errorDiv.textContent = '';
+            errorDiv.className = 'status-message';
+            
             if (!username) {
-                errorDiv.textContent = 'Please enter a Kick username.';
+                showError('Please enter a Kick username.');
                 return;
             }
-            resultDiv.textContent = 'Fetching...';
-            resultDiv.style.display = 'block';
+            
+            resultDiv.innerHTML = '<div class="result-label">Fetching chatroom data...</div>';
+            resultDiv.classList.remove('hidden');
+            
             try {
                 const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(username)}`);
                 if (!res.ok) throw new Error('User not found or API error.');
+                
                 const data = await res.json();
                 if (!data.chatroom || !data.chatroom.id) throw new Error('Chatroom ID not found for this user.');
+                
                 const chatroomId = data.chatroom.id;
-                resultDiv.innerHTML = `<strong>Chatroom ID:</strong> <code>${chatroomId}</code>`;
-                resultDiv.style.display = 'block';
-                // Save to localStorage
+                resultDiv.innerHTML = `
+                    <div class="result-label">Chatroom ID Found</div>
+                    <div class="code-block">${chatroomId}</div>
+                `;
+                
                 const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
                 settings.kickUsername = username;
                 settings.chatroomId = chatroomId;
                 localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
+                
+                showSuccess('Chatroom ID fetched successfully!');
             } catch (err) {
-                resultDiv.style.display = 'none';
-                errorDiv.textContent = err.message;
+                resultDiv.classList.add('hidden');
+                showError(err.message);
             }
         }
         function showBridgeUrl() {
             const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
+            const urlDiv = document.getElementById('url');
+            
+            if (!settings.chatroomId) {
+                urlDiv.style.display = 'none';
+                return;
+            }
+            
             const sbIp = settings.sbIp || '127.0.0.1';
             const sbPort = settings.sbPort || '8080';
             let rewardPrefix = settings.rewardPrefix || 'KickReward-';
-            if (!settings.chatroomId) {
-                document.getElementById('url').style.display = 'none';
-                return;
-            }
+            
             rewardPrefix = rewardPrefix.replace(/_/g, '-');
             if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+            
             let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
             if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
             if (sbPort !== '8080') url += `&sbport=${sbPort}`;
             if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
-            document.getElementById('url').innerHTML = `
-                <label for="bridge-url-input" style="font-weight:600;">Bridge URL:</label>
-                <textarea id="bridge-url-input" readonly rows="2" style="display:block;width:100%;min-width:320px;max-width:100vw;padding:0.5em 0.7em;margin-top:0.3em;border-radius:6px;border:1.5px solid var(--accent);background:#181c24;color:#e0e0e0;font-size:1em;user-select:all;outline:none;overflow-x:auto;resize:vertical;word-break:break-all;">${url}</textarea>
-                <div style="margin-top:0.5em;display:flex;align-items:center;gap:0.5em;">
-                    <button id="copy-url-btn" title="Copy URL" style="background:var(--accent);color:#181c24;border:none;padding:0.5em 1.2em;border-radius:6px;font-size:1em;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;gap:0.4em;min-width:90px;">
-                        <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13' rx='2' stroke='#181c24' stroke-width='2' fill='none'/><rect x='3' y='3' width='13' height='13' rx='2' stroke='#181c24' stroke-width='2' fill='none'/></svg>
-                        Copy
+            
+            urlDiv.innerHTML = `
+                <div class="result-label">Bridge URL Generated</div>
+                <textarea id="bridge-url-input" readonly class="url-textarea" rows="3">${url}</textarea>
+                <div class="btn-group">
+                    <button id="copy-url-btn" class="btn btn-primary">
+                        <i class="fas fa-copy"></i>
+                        Copy Bridge URL
                     </button>
-                    <span id="copy-url-confirm" style="color:var(--accent);font-size:1em;font-weight:600;display:none;">Bridge URL copied!</span>
+                </div>
+                <div id="copy-url-confirm" class="status-message status-success" style="display:none;">
+                    <i class="fas fa-check"></i>
+                    Bridge URL copied to clipboard!
                 </div>
             `;
-            document.getElementById('url').style.display = 'block';
+            urlDiv.style.display = 'block';
+            
             setTimeout(() => {
                 const urlInput = document.getElementById('bridge-url-input');
                 const copyBtn = document.getElementById('copy-url-btn');
                 const confirmMsg = document.getElementById('copy-url-confirm');
-                function doCopy() {
-                    urlInput.select();
-                    navigator.clipboard.writeText(urlInput.value);
-                    confirmMsg.style.display = 'block';
-                    setTimeout(() => { confirmMsg.style.display = 'none'; }, 1500);
+                
+                if (urlInput) {
+                    urlInput.onclick = () => urlInput.select();
                 }
-                if (urlInput) urlInput.onclick = () => urlInput.select();
-                if (copyBtn) copyBtn.onclick = doCopy;
+                
+                if (copyBtn) {
+                    copyBtn.onclick = () => {
+                        urlInput.select();
+                        navigator.clipboard.writeText(urlInput.value).then(() => {
+                            confirmMsg.style.display = 'block';
+                            setTimeout(() => { confirmMsg.style.display = 'none'; }, 3000);
+                        });
+                    };
+                }
             }, 0);
         }
         function saveSettings() {
@@ -335,15 +729,32 @@
             const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
             const sbPort = document.getElementById('sb-port').value.trim() || '8080';
             const rewardPrefix = document.getElementById('reward-prefix').value || 'KickReward-';
+            
             const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
             if (username) settings.kickUsername = username;
             settings.sbIp = sbIp;
             settings.sbPort = sbPort;
             settings.rewardPrefix = rewardPrefix;
             localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
-            document.getElementById('error').textContent = 'Settings saved!';
-            setTimeout(() => { document.getElementById('error').textContent = ''; }, 1500);
+            
+            showSuccess('Configuration saved successfully!');
             showBridgeUrl();
+        }
+        
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.className = 'status-message status-success';
+            errorDiv.innerHTML = `<i class="fas fa-check"></i> ${message}`;
+            setTimeout(() => { 
+                errorDiv.textContent = '';
+                errorDiv.className = 'status-message';
+            }, 3000);
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.className = 'status-message status-error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
         }
     </script>
 </body>
