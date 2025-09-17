@@ -723,28 +723,44 @@
                 showError(err.message);
             }
         }
-        function showBridgeUrl() {
+        async function showBridgeUrl() {
             const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
             const urlDiv = document.getElementById('url');
-            
+
             if (!settings.chatroomId) {
                 urlDiv.style.display = 'none';
                 return;
             }
-            
+
+            // If channelId is missing but we have username, try to fetch it
+            if (!settings.channelId && settings.kickUsername) {
+                try {
+                    const res = await fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(settings.kickUsername)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.chatroom && data.chatroom.chatable_id) {
+                            settings.channelId = data.chatroom.chatable_id;
+                            localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Could not fetch channel ID:', err);
+                }
+            }
+
             const sbIp = settings.sbIp || '127.0.0.1';
             const sbPort = settings.sbPort || '8080';
             let rewardPrefix = settings.rewardPrefix || 'KickReward-';
-            
+
             rewardPrefix = rewardPrefix.replace(/_/g, '-');
             if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
-            
+
             let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
             if (settings.channelId) url += `&channelid=${settings.channelId}`;
             if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
             if (sbPort !== '8080') url += `&sbport=${sbPort}`;
             if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
-            
+
             urlDiv.innerHTML = `
                 <div class="result-label">Bridge URL Generated</div>
                 <textarea id="bridge-url-input" readonly class="url-textarea" rows="3">${url}</textarea>
@@ -760,16 +776,16 @@
                 </div>
             `;
             urlDiv.style.display = 'block';
-            
+
             setTimeout(() => {
                 const urlInput = document.getElementById('bridge-url-input');
                 const copyBtn = document.getElementById('copy-url-btn');
                 const confirmMsg = document.getElementById('copy-url-confirm');
-                
+
                 if (urlInput) {
                     urlInput.onclick = () => urlInput.select();
                 }
-                
+
                 if (copyBtn) {
                     copyBtn.onclick = () => {
                         urlInput.select();
