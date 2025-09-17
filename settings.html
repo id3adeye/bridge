@@ -483,7 +483,7 @@
                     
                     <div class="form-group">
                         <label class="form-label" for="sb-port">Streamer.bot Port</label>
-                        <input type="number" id="sb-port" class="form-input" placeholder="8080" min="1" max="65535" />
+                        <input type="number" id="sb-port" class="form-input" placeholder="8080" value="8080" min="1" max="65535" />
                     </div>
 
                     <div class="divider"></div>
@@ -567,6 +567,52 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Kicks Gifted Actions</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these specific actions are triggered based on the amount:</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks1</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks10</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks50</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks100</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks500</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks1000</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks2000</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks5000</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks10000</div>
+                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks50000</div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Kicks actions include these variables:</p>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickGiftName</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Name of the gift</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickGiftAmount</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Amount of kicks gifted</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUsername</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">User who gifted</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUserId</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Gifter's user ID</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickUserColor</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Gifter's username color</span>
+                            </div>
+                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 600;">kickMessage</span>
+                                <span style="color: var(--text-muted); font-size: 0.75rem;">Optional message with gift</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -615,10 +661,17 @@
             
             if (saved.chatroomId) {
                 const resultDiv = document.getElementById('kick-result');
-                resultDiv.innerHTML = `
+                let resultHtml = `
                     <div class="result-label">Chatroom ID Found</div>
                     <div class="code-block">${saved.chatroomId}</div>
                 `;
+                if (saved.channelId) {
+                    resultHtml += `
+                        <div class="result-label">Channel ID Found</div>
+                        <div class="code-block">${saved.channelId}</div>
+                    `;
+                }
+                resultDiv.innerHTML = resultHtml;
                 resultDiv.classList.remove('hidden');
                 showBridgeUrl();
             }
@@ -648,16 +701,20 @@
                 
                 const data = await res.json();
                 if (!data.chatroom || !data.chatroom.id) throw new Error('Chatroom ID not found for this user.');
-                
+
                 const chatroomId = data.chatroom.id;
+                const channelId = data.chatroom.chatable_id;
                 resultDiv.innerHTML = `
                     <div class="result-label">Chatroom ID Found</div>
                     <div class="code-block">${chatroomId}</div>
+                    <div class="result-label">Channel ID Found</div>
+                    <div class="code-block">${channelId}</div>
                 `;
-                
+
                 const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
                 settings.kickUsername = username;
                 settings.chatroomId = chatroomId;
+                settings.channelId = channelId;
                 localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
                 
                 showSuccess('Chatroom ID fetched successfully!');
@@ -683,6 +740,7 @@
             if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
             
             let url = `${window.location.origin}/bridge/kickbridge.html?chatroomid=${settings.chatroomId}`;
+            if (settings.channelId) url += `&channelid=${settings.channelId}`;
             if (sbIp !== '127.0.0.1') url += `&sbip=${encodeURIComponent(sbIp)}`;
             if (sbPort !== '8080') url += `&sbport=${sbPort}`;
             if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;

@@ -265,12 +265,14 @@
         return undefined;
     }
     log.info('SYSTEM', '🚀 Kick Bridge initialized');
-    
+
     const chatroomId = getQueryParam('chatroomid');
+    const channelId = getQueryParam('channelid');
     const sbIp = getQueryParam('sbip') || '127.0.0.1';
     const sbPort = getQueryParam('sbport') || '8080';
-    
+
     log.info('CONFIG', `Chatroom ID: ${chatroomId || 'Not set'}`);
+    log.info('CONFIG', `Channel ID: ${channelId || 'Not set'}`);
     log.info('CONFIG', `Streamer.bot: ${sbIp}:${sbPort}`);
     
     if (!chatroomId || !sbIp || !sbPort) {
@@ -297,10 +299,12 @@
             name: "KickUser",
             chatroomId: chatroomId,
             streamerId: chatroomId,
+            channelId: channelId,
             channels: {
                 chatroomv2: `chatrooms.${chatroomId}.v2`,
                 chatroom: `chatroom_${chatroomId}`,
-                chatrooms: `chatrooms_${chatroomId}`
+                chatrooms: `chatrooms_${chatroomId}`,
+                channel: channelId ? `channel_${channelId}` : null
             }
         };
         const SB_WEBSOCKET_IP = sbIp;
@@ -387,6 +391,11 @@
         bindChatroomSub(ACCOUNT.channels.chatroomv2);
         bindChatroomSub(ACCOUNT.channels.chatroom);
         bindChatroomSub(ACCOUNT.channels.chatrooms);
+
+        // Subscribe to channel for KicksGifted events if channelId is available
+        if (ACCOUNT.channels.channel) {
+            bindChatroomSub(ACCOUNT.channels.channel);
+        }
         pusher.connection.bind('state_change', (states) => {
             log.info('KICK', `Pusher connection state: ${states.previous} → ${states.current}`);
             
@@ -406,7 +415,7 @@
 
         function handleRewardRedemption(data) {
             let rewardData = null;
-            
+
             if (typeof data === 'string') {
                 try {
                     rewardData = JSON.parse(data);
@@ -419,22 +428,22 @@
             } else {
                 return;
             }
-            
+
             if (!rewardData || typeof rewardData !== 'object') return;
-            
+
             let rewardTitle = rewardData.reward_title || '';
             rewardTitle = rewardTitle.trim().replace(/^[-]+/, '');
-            
+
             const username = rewardData.username;
             const userInput = rewardData.user_input;
-            
+
             log.reward('KICK', `🎁 Reward "${rewardTitle}" redeemed by ${username}`, {
                 title: rewardTitle,
                 user: username,
                 input: userInput,
                 userId: rewardData.user_id
             });
-            
+
             const args = {
                 kickRewardTitle: rewardTitle,
                 kickUsername: username,
@@ -442,23 +451,89 @@
                 kickUserId: rewardData.user_id,
                 kickChannelId: rewardData.channel_id
             };
-            
+
             const actionName = `${rewardPrefix}${rewardTitle}`;
-            
+
             if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
                 log.success('STREAMER.BOT', `Triggering action: ${actionName}`, args);
-                
+
                 const request = {
                     request: "DoAction",
                     action: { name: actionName },
                     args: args,
                     id: `kick-${Date.now()}`
                 };
-                
+
                 sbSocket.send(JSON.stringify(request));
             } else {
                 log.error('STREAMER.BOT', 'Cannot send reward - WebSocket not connected');
                 showStatus('Reward Failed', 'error', 'Streamer.bot connection lost - reward could not be sent');
+            }
+        }
+
+        function handleKicksGifted(data) {
+            let kickData = null;
+
+            if (typeof data === 'string') {
+                try {
+                    kickData = JSON.parse(data);
+                } catch (e) {
+                    log.error('KICK', 'Failed to parse kicks gifted data', data);
+                    return;
+                }
+            } else if (typeof data === 'object' && data !== null) {
+                kickData = data;
+            } else {
+                return;
+            }
+
+            if (!kickData || typeof kickData !== 'object') return;
+
+            const sender = kickData.sender || {};
+            const gift = kickData.gift || {};
+            const message = kickData.message || '';
+
+            const username = sender.username || 'Unknown';
+            const giftName = gift.name || 'Unknown Gift';
+            const amount = gift.amount || 0;
+            const giftType = gift.type || '';
+            const tier = gift.tier || '';
+
+            log.reward('KICK', `🎁 Kicks Gifted: ${giftName} (${amount}) by ${username}`, {
+                sender: sender,
+                gift: gift,
+                message: message
+            });
+
+            const args = {
+                kickGiftName: giftName,
+                kickGiftAmount: amount,
+                kickGiftType: giftType,
+                kickGiftTier: tier,
+                kickUsername: username,
+                kickUserId: sender.id,
+                kickUserColor: sender.username_color,
+                kickMessage: message,
+                kickChannelId: channelId
+            };
+
+            // Create action name based on kick amount (without prefix for kicks)
+            const actionName = `Kicks${amount}`;
+
+            if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
+                log.success('STREAMER.BOT', `Triggering action: ${actionName}`, args);
+
+                const request = {
+                    request: "DoAction",
+                    action: { name: actionName },
+                    args: args,
+                    id: `kick-gifted-${Date.now()}`
+                };
+
+                sbSocket.send(JSON.stringify(request));
+            } else {
+                log.error('STREAMER.BOT', 'Cannot send kicks gifted - WebSocket not connected');
+                showStatus('Kicks Gifted Failed', 'error', 'Streamer.bot connection lost - kicks gifted could not be sent');
             }
         }
         // Subscribe to reward events on all chatroom channels
@@ -466,6 +541,20 @@
             channel.bind('RewardRedeemedEvent', handleRewardRedemption);
         }
         chatroomSubs.forEach(bindRewardEvents);
+
+        // Subscribe to KicksGifted events on the channel if available
+        if (ACCOUNT.channels.channel) {
+            const channelSub = pusher.subscribe(ACCOUNT.channels.channel);
+            channelSub.bind('KicksGifted', handleKicksGifted);
+
+            channelSub.bind('pusher:subscription_succeeded', () => {
+                log.success('KICK', `Subscribed to KicksGifted events on channel: ${ACCOUNT.channels.channel}`);
+            });
+
+            channelSub.bind('pusher:subscription_error', () => {
+                log.error('KICK', `Failed to subscribe to KicksGifted events on channel: ${ACCOUNT.channels.channel}`);
+            });
+        }
     }
 </script>
 </body>
