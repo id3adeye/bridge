@@ -477,12 +477,12 @@
                     <div class="divider"></div>
 
                     <div class="form-group">
-                        <label class="form-label" for="sb-ip">Streamer.bot IP Address</label>
+                        <label class="form-label" for="sb-ip">Streamer.bot WebSocket IP Address</label>
                         <input type="text" id="sb-ip" class="form-input" placeholder="127.0.0.1" />
                     </div>
-                    
+
                     <div class="form-group">
-                        <label class="form-label" for="sb-port">Streamer.bot Port</label>
+                        <label class="form-label" for="sb-port">Streamer.bot WebSocket Port</label>
                         <input type="number" id="sb-port" class="form-input" placeholder="8080" value="8080" min="1" max="65535" />
                     </div>
 
@@ -498,7 +498,12 @@
                             <i class="fas fa-save"></i>
                             Save Configuration
                         </button>
+                        <button class="btn btn-secondary" onclick="testConnection()">
+                            <i class="fas fa-bolt"></i>
+                            Test Connection
+                        </button>
                     </div>
+
 
                     <div id="url" class="url-output" style="display:none;"></div>
                     <div id="error" class="status-message"></div>
@@ -542,9 +547,48 @@
                     <div class="divider"></div>
 
                     <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Kicks Gifted Actions</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these specific actions are triggered based on the amount. Click any button to send a test trigger:</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
+                            <button class="btn btn-secondary" onclick="testKicksAction(1)" style="font-size: 0.875rem;">Kicks1</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(10)" style="font-size: 0.875rem;">Kicks10</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(50)" style="font-size: 0.875rem;">Kicks50</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(100)" style="font-size: 0.875rem;">Kicks100</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(500)" style="font-size: 0.875rem;">Kicks500</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(1000)" style="font-size: 0.875rem;">Kicks1000</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(2000)" style="font-size: 0.875rem;">Kicks2000</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(5000)" style="font-size: 0.875rem;">Kicks5000</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(10000)" style="font-size: 0.875rem;">Kicks10000</button>
+                            <button class="btn btn-secondary" onclick="testKicksAction(50000)" style="font-size: 0.875rem;">Kicks50000</button>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group">
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Test Reward Actions</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Test your custom reward actions by entering the action name (without prefix):</p>
+                        <div style="display: flex; gap: 0.75rem; align-items: end;">
+                            <div style="flex: 1;">
+                                <label class="form-label" for="test-reward-name">Reward Action Name</label>
+                                <input type="text" id="test-reward-name" class="form-input" placeholder="e.g. Shoutout, Dance, Follow" />
+                            </div>
+                            <button class="btn btn-secondary" onclick="testRewardAction()" style="white-space: nowrap;">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Test
+                            </button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">This will trigger: <span id="reward-action-preview" style="color: var(--primary-brand); font-family: monospace;">KickReward-{RewardName}</span></p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-group">
                         <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Streamer.bot Variables</h3>
+
+                        <h4 style="color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Reward Variables</h4>
                         <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When a Kick reward is triggered, these variables are passed to your Streamer.bot action:</p>
-                        <div style="display: grid; gap: 0.75rem;">
+                        <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
                             <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-weight: 600;">kickRewardTitle</span>
                                 <span style="color: var(--text-muted); font-size: 0.75rem;">Reward name</span>
@@ -566,26 +610,9 @@
                                 <span style="color: var(--text-muted); font-size: 0.75rem;">Channel ID number</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="divider"></div>
-
-                    <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Kicks Gifted Actions</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these specific actions are triggered based on the amount:</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks1</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks10</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks50</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks100</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks500</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks1000</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks2000</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks5000</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks10000</div>
-                            <div class="code-block" style="text-align: center; padding: 0.5rem;">Kicks50000</div>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Kicks actions include these variables:</p>
+                        <h4 style="color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Kick Variables</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these variables are passed to your Streamer.bot action:</p>
                         <div style="display: grid; gap: 0.75rem;">
                             <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-weight: 600;">kickGiftName</span>
@@ -676,8 +703,11 @@
                 showBridgeUrl();
             }
             updateRewardPrefixHowTo();
+            updateRewardActionPreview();
         };
         document.getElementById('reward-prefix').addEventListener('input', updateRewardPrefixHowTo);
+        document.getElementById('reward-prefix').addEventListener('input', updateRewardActionPreview);
+        document.getElementById('test-reward-name').addEventListener('input', updateRewardActionPreview);
         async function fetchChatroomId() {
             const username = document.getElementById('kick-username').value.trim();
             const resultDiv = document.getElementById('kick-result');
@@ -828,6 +858,242 @@
             const errorDiv = document.getElementById('error');
             errorDiv.className = 'status-message status-error';
             errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+        }
+
+        function testConnection() {
+            const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
+            const sbPort = document.getElementById('sb-port').value.trim() || '8080';
+
+            const errorDiv = document.getElementById('error');
+            errorDiv.className = 'status-message';
+            errorDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing connection to Streamer.bot...';
+
+            const wsUrl = `ws://${sbIp}:${sbPort}/`;
+            let handshakeReceived = false;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    // WebSocket opened, now wait for Streamer.bot handshake message
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.request === "Hello" && data.info && data.info.name === "Streamer.bot") {
+                            handshakeReceived = true;
+                            showSuccess(`Successfully connected to Streamer.bot v${data.info.version} at ${sbIp}:${sbPort}`);
+                            ws.close();
+                        } else {
+                            showError(`Unexpected response from ${sbIp}:${sbPort}. Missing Hello request or Streamer.bot info.`);
+                            ws.close();
+                        }
+                    } catch (e) {
+                        showError(`Invalid JSON response from ${sbIp}:${sbPort}. This may not be Streamer.bot WebSocket server.`);
+                        ws.close();
+                    }
+                };
+
+                ws.onerror = (e) => {
+                    showError(`Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Check IP, port, and WebSocket server status.`);
+                };
+
+                ws.onclose = (e) => {
+                    // Only show error if handshake wasn't received and it's not a normal close
+                    if (!handshakeReceived && e.code !== 1000 && e.code !== 1005 && e.code !== 1006) {
+                        showError(`Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`);
+                    }
+                };
+
+                // Timeout after 5 seconds
+                setTimeout(() => {
+                    if (!handshakeReceived) {
+                        ws.close();
+                        if (ws.readyState === WebSocket.CONNECTING) {
+                            showError(`Connection timeout. Check if Streamer.bot is running and WebSocket server is enabled.`);
+                        } else {
+                            showError(`No handshake received from Streamer.bot. Check if WebSocket server is properly configured.`);
+                        }
+                    }
+                }, 5000);
+
+            } catch (error) {
+                showError(`Failed to create WebSocket connection: ${error.message}`);
+            }
+        }
+
+        function testKicksAction(amount) {
+            const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
+            const sbPort = document.getElementById('sb-port').value.trim() || '8080';
+
+            const errorDiv = document.getElementById('error');
+            errorDiv.className = 'status-message';
+            errorDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for Kicks${amount}...`;
+
+            const wsUrl = `ws://${sbIp}:${sbPort}/`;
+            let responseReceived = false;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    const testData = {
+                        request: 'DoAction',
+                        action: {
+                            name: `Kicks${amount}`
+                        },
+                        args: {
+                            kickGiftName: `${amount} Kicks`,
+                            kickGiftAmount: amount,
+                            kickGiftType: 'kicks',
+                            kickGiftTier: '',
+                            kickUsername: 'TestUser',
+                            kickUserId: '12345',
+                            kickUserColor: '#00FF00',
+                            kickMessage: `Test message for ${amount} kicks`,
+                            kickChannelId: '67890'
+                        },
+                        id: `test-kicks-${amount}-${Date.now()}`
+                    };
+
+                    ws.send(JSON.stringify(testData));
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.status === "ok" && data.args && data.args.actionName === `Kicks${amount}`) {
+                            responseReceived = true;
+                            showSuccess(`✅ Test worked! Kicks${amount} action triggered successfully.`);
+                            ws.close();
+                        }
+                    } catch (e) {
+                        // Ignore parsing errors for non-response messages
+                    }
+                };
+
+                ws.onerror = (e) => {
+                    showError(`Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`);
+                };
+
+                ws.onclose = (e) => {
+                    // Don't show errors for normal close codes during testing
+                    if (e.code !== 1000 && e.code !== 1005 && e.code !== 1006 && ws.readyState !== WebSocket.OPEN) {
+                        showError(`Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`);
+                    }
+                };
+
+                // Timeout after 3 seconds - check if action was found
+                setTimeout(() => {
+                    if (!responseReceived && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+                        ws.close();
+                        showError(`❌ No action found: Kicks${amount} action does not exist in Streamer.bot. Please create this action first.`);
+                    }
+                }, 3000);
+
+            } catch (error) {
+                showError(`Failed to create WebSocket connection: ${error.message}`);
+            }
+        }
+
+        function testRewardAction() {
+            const rewardName = document.getElementById('test-reward-name').value.trim();
+            if (!rewardName) {
+                showError('Please enter a reward action name to test.');
+                return;
+            }
+
+            const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
+            const sbPort = document.getElementById('sb-port').value.trim() || '8080';
+            let rewardPrefix = document.getElementById('reward-prefix').value || 'KickReward-';
+
+            // Normalize reward prefix
+            rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+
+            const actionName = `${rewardPrefix}${rewardName}`;
+
+            const errorDiv = document.getElementById('error');
+            errorDiv.className = 'status-message';
+            errorDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for ${actionName}...`;
+
+            const wsUrl = `ws://${sbIp}:${sbPort}/`;
+            let responseReceived = false;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    const testData = {
+                        request: 'DoAction',
+                        action: {
+                            name: actionName
+                        },
+                        args: {
+                            kickRewardTitle: rewardName,
+                            kickUsername: 'TestUser',
+                            kickUserInput: `Test input for ${rewardName} reward`,
+                            kickUserId: '12345',
+                            kickChannelId: '67890'
+                        },
+                        id: `test-reward-${rewardName}-${Date.now()}`
+                    };
+
+                    ws.send(JSON.stringify(testData));
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.status === "ok" && data.args && data.args.actionName === actionName) {
+                            responseReceived = true;
+                            showSuccess(`✅ Test worked! ${actionName} action triggered successfully.`);
+                            ws.close();
+                        }
+                    } catch (e) {
+                        // Ignore parsing errors for non-response messages
+                    }
+                };
+
+                ws.onerror = (e) => {
+                    showError(`Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`);
+                };
+
+                ws.onclose = (e) => {
+                    // Don't show errors for normal close codes during testing
+                    if (e.code !== 1000 && e.code !== 1005 && e.code !== 1006 && ws.readyState !== WebSocket.OPEN) {
+                        showError(`Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`);
+                    }
+                };
+
+                // Timeout after 3 seconds - check if action was found
+                setTimeout(() => {
+                    if (!responseReceived && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+                        ws.close();
+                        showError(`❌ No action found: ${actionName} action does not exist in Streamer.bot. Please create this action first.`);
+                    }
+                }, 3000);
+
+            } catch (error) {
+                showError(`Failed to create WebSocket connection: ${error.message}`);
+            }
+        }
+
+        function updateRewardActionPreview() {
+            const rewardName = document.getElementById('test-reward-name').value.trim();
+            let rewardPrefix = document.getElementById('reward-prefix').value || 'KickReward-';
+
+            // Normalize reward prefix
+            rewardPrefix = rewardPrefix.replace(/_/g, '-');
+            if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
+
+            const preview = document.getElementById('reward-action-preview');
+            if (rewardName) {
+                preview.textContent = `${rewardPrefix}${rewardName}`;
+            } else {
+                preview.textContent = `${rewardPrefix}{RewardName}`;
+            }
         }
     </script>
 </body>
