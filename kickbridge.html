@@ -536,9 +536,66 @@
                 showStatus('Kicks Gifted Failed', 'error', 'Streamer.bot connection lost - kicks gifted could not be sent');
             }
         }
+
+        function handleRaidEvent(data) {
+            let raidData = null;
+
+            if (typeof data === 'string') {
+                try {
+                    raidData = JSON.parse(data);
+                } catch (e) {
+                    log.error('KICK', 'Failed to parse raid data', data);
+                    return;
+                }
+            } else if (typeof data === 'object' && data !== null) {
+                raidData = data;
+            } else {
+                return;
+            }
+
+            if (!raidData || typeof raidData !== 'object') return;
+
+            const chatroomId = raidData.chatroom_id || 0;
+            const optionalMessage = raidData.optional_message || '';
+            const numberViewers = raidData.number_viewers || 0;
+            const hostUsername = raidData.host_username || 'Unknown';
+
+            log.reward('KICK', `🎯 Raid from ${hostUsername} with ${numberViewers} viewers`, {
+                host: hostUsername,
+                viewers: numberViewers,
+                message: optionalMessage,
+                chatroomId: chatroomId
+            });
+
+            const args = {
+                kickHostUsername: hostUsername,
+                kickHostViewerCount: numberViewers,
+                kickHostMessage: optionalMessage,
+                kickHostChatroomId: chatroomId
+            };
+
+            const actionName = 'KickHost';
+
+            if (sbSocket && sbSocket.readyState === WebSocket.OPEN) {
+                log.success('STREAMER.BOT', `Triggering action: ${actionName}`, args);
+
+                const request = {
+                    request: "DoAction",
+                    action: { name: actionName },
+                    args: args,
+                    id: `kick-host-${Date.now()}`
+                };
+
+                sbSocket.send(JSON.stringify(request));
+            } else {
+                log.error('STREAMER.BOT', 'Cannot send host - WebSocket not connected');
+                showStatus('Host Failed', 'error', 'Streamer.bot connection lost - host could not be sent');
+            }
+        }
         // Subscribe to reward events on all chatroom channels
         function bindRewardEvents(channel) {
             channel.bind('RewardRedeemedEvent', handleRewardRedemption);
+            channel.bind('StreamHostEvent', handleRaidEvent);
         }
         chatroomSubs.forEach(bindRewardEvents);
 

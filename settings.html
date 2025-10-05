@@ -444,14 +444,14 @@
 <body>
     <div class="dashboard-container">
         <header class="header">
-            <div class="brand-logo">
+            <a href="https://kick.com/ichrisirl" target="_blank" rel="noopener" class="brand-logo" style="text-decoration: none; cursor: pointer;">
                 <div class="brand-icon">
                     <i class="fas fa-bolt"></i>
                 </div>
                 <div class="brand-text">ICHRISIRL</div>
-            </div>
+            </a>
             <h1 class="main-title">Kick Bridge<br>Settings Dashboard</h1>
-            <p class="subtitle">Professional streaming integration for Kick rewards and kicks to Streamer.bot</p>
+            <p class="subtitle">Professional streaming integration for Kick rewards, kicks, and hosts to Streamer.bot</p>
         </header>
 
         <main class="main-content">
@@ -465,9 +465,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="kick-username">Kick Username</label>
+                        <label class="form-label" for="kick-username">
+                            <i class="fa-brands fa-kickstarter-k" style="color: #53fc18; margin-right: 0.25rem;"></i>
+                            Kick Username
+                        </label>
                         <input type="text" id="kick-username" class="form-input" placeholder="e.g. mykickusername" autocomplete="off" />
-                        <button class="btn btn-secondary" onclick="fetchChatroomId()">
+                        <button class="btn btn-secondary" onclick="fetchChatroomId()" style="margin-top: 0.75rem;">
                             <i class="fas fa-search"></i>
                             Fetch Chatroom ID
                         </button>
@@ -477,20 +480,33 @@
                     <div class="divider"></div>
 
                     <div class="form-group">
-                        <label class="form-label" for="sb-ip">Streamer.bot WebSocket IP Address</label>
+                        <label class="form-label" for="sb-ip">
+                            <i class="fas fa-network-wired" style="color: #74b9ff; margin-right: 0.25rem;"></i>
+                            Streamer.bot WebSocket IP Address
+                        </label>
                         <input type="text" id="sb-ip" class="form-input" placeholder="127.0.0.1" />
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="sb-port">Streamer.bot WebSocket Port</label>
+                        <label class="form-label" for="sb-port">
+                            <i class="fas fa-plug" style="color: #74b9ff; margin-right: 0.25rem;"></i>
+                            Streamer.bot WebSocket Port
+                        </label>
                         <input type="number" id="sb-port" class="form-input" placeholder="8080" value="8080" min="1" max="65535" />
                     </div>
 
                     <div class="divider"></div>
 
                     <div class="form-group">
-                        <label class="form-label" for="reward-prefix">Reward Action Prefix</label>
-                        <input type="text" id="reward-prefix" class="form-input" placeholder="KickReward-" />
+                        <label class="form-label" for="reward-prefix">
+                            <i class="fas fa-gift" style="color: var(--primary-brand); margin-right: 0.25rem;"></i>
+                            Reward Action Prefix
+                        </label>
+                        <input type="text" id="reward-prefix" class="form-input" placeholder="KickReward-" style="border-left: 3px solid var(--primary-brand);" />
+                        <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">
+                            <i class="fas fa-info-circle" style="color: var(--primary-brand);"></i>
+                            This prefix is added to all custom reward action names
+                        </p>
                     </div>
 
                     <div class="btn-group">
@@ -514,134 +530,220 @@
                         <div class="card-icon">
                             <i class="fas fa-info-circle"></i>
                         </div>
-                        <h2 class="card-title">Setup Guide</h2>
+                        <h2 class="card-title">Setup Guide & Events</h2>
                     </div>
 
                     <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Reward Action Prefix</h3>
-                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
-                            <li style="margin-bottom: 0.5rem;">Sets your Streamer.bot action names for Kick rewards</li>
-                            <li style="margin-bottom: 1rem;">Example: Prefix <span class="code-block reward-prefix-example" style="display: inline; padding: 0.125rem 0.375rem;">KickReward-</span> + reward <span class="code-block reward-title-example" style="display: inline; padding: 0.125rem 0.375rem;">Shoutout</span> = action:</li>
-                        </ul>
-                        <div style="background: var(--bg-primary); border: 2px solid var(--primary-brand); border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0; text-align: center; box-shadow: var(--shadow-glow);">
-                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">ACTION NAME</div>
-                            <div class="action-name-example" style="font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 1.125rem; font-weight: 700; color: var(--primary-brand); letter-spacing: 0.05em;">KickReward-Shoutout</div>
-                        </div>
-                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
-                            <li>Customize to match your existing action names</li>
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Quick Start</h3>
+                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem; margin: 0;">
+                            <li style="margin-bottom: 0.25rem;">Configure settings & save to generate bridge URL</li>
+                            <li style="margin-bottom: 0.25rem;">Add Browser Source in OBS with the URL</li>
+                            <li style="margin-bottom: 0.25rem;">Create matching actions in Streamer.bot</li>
+                            <li>Test with the button below</li>
                         </ul>
                     </div>
 
                     <div class="divider"></div>
 
                     <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">OBS Integration</h3>
-                        <ul style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; padding-left: 1.25rem;">
-                            <li style="margin-bottom: 0.5rem;">Configure your Kick username and Streamer.bot settings</li>
-                            <li style="margin-bottom: 0.5rem;">Click "Save Configuration" to generate your bridge URL</li>
-                            <li style="margin-bottom: 0.5rem;">Add a Browser Source in OBS with the generated URL</li>
-                            <li>Bridge automatically syncs Kick chat and rewards to Streamer.bot</li>
-                        </ul>
-                    </div>
+                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Event Types & Actions</h3>
 
-                    <div class="divider"></div>
-
-                    <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Kicks Gifted Actions</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these specific actions are triggered based on the amount. Click any button to send a test trigger:</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
-                            <button class="btn btn-secondary" onclick="testKicksAction(1)" style="font-size: 0.875rem;">Kicks1</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(10)" style="font-size: 0.875rem;">Kicks10</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(50)" style="font-size: 0.875rem;">Kicks50</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(100)" style="font-size: 0.875rem;">Kicks100</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(500)" style="font-size: 0.875rem;">Kicks500</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(1000)" style="font-size: 0.875rem;">Kicks1000</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(2000)" style="font-size: 0.875rem;">Kicks2000</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(5000)" style="font-size: 0.875rem;">Kicks5000</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(10000)" style="font-size: 0.875rem;">Kicks10000</button>
-                            <button class="btn btn-secondary" onclick="testKicksAction(50000)" style="font-size: 0.875rem;">Kicks50000</button>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Test Reward Actions</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Test your custom reward actions by entering the action name (without prefix):</p>
-                        <div style="display: flex; gap: 0.75rem; align-items: end;">
-                            <div style="flex: 1;">
-                                <label class="form-label" for="test-reward-name">Reward Action Name</label>
-                                <input type="text" id="test-reward-name" class="form-input" placeholder="e.g. Shoutout, Dance, Follow" />
-                            </div>
-                            <button class="btn btn-secondary" onclick="testRewardAction()" style="white-space: nowrap;">
-                                <i class="fas fa-paper-plane"></i>
-                                Send Test
+                        <!-- Tab Navigation -->
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border);">
+                            <button onclick="switchTab('rewards')" id="tab-rewards" class="event-tab active" style="flex: 1; padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: var(--transition); margin-bottom: -2px;">
+                                <i class="fas fa-gift"></i> Rewards
+                            </button>
+                            <button onclick="switchTab('kicks')" id="tab-kicks" class="event-tab" style="flex: 1; padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: var(--transition); margin-bottom: -2px;">
+                                <i class="fas fa-coins"></i> Kicks
+                            </button>
+                            <button onclick="switchTab('raids')" id="tab-raids" class="event-tab" style="flex: 1; padding: 0.75rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: var(--transition); margin-bottom: -2px;">
+                                <i class="fas fa-users"></i> Hosts
                             </button>
                         </div>
-                        <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">This will trigger: <span id="reward-action-preview" style="color: var(--primary-brand); font-family: monospace;">KickReward-{RewardName}</span></p>
-                    </div>
 
-                    <div class="divider"></div>
+                        <!-- Tab Content -->
+                        <div id="content-rewards" class="tab-content" style="display: block;">
+                            <div style="background: var(--bg-elevated); border-left: 3px solid var(--primary-brand); padding: 1.25rem; border-radius: var(--radius-sm);">
+                                <h4 style="color: var(--text-primary); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">Custom Rewards</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.75rem;">Triggered when viewers redeem Kick rewards</p>
 
-                    <div class="form-group">
-                        <h3 style="color: var(--primary-brand); font-size: 1rem; margin-bottom: 0.75rem;">Streamer.bot Variables</h3>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Action Format</span>
+                                    <div class="code-block" style="margin-top: 0.25rem; padding: 0.5rem;">
+                                        <span class="reward-prefix-example">KickReward-</span><span class="reward-title-example">Shoutout</span>
+                                    </div>
+                                    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Your Prefix + Reward Title</p>
+                                </div>
 
-                        <h4 style="color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Reward Variables</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When a Kick reward is triggered, these variables are passed to your Streamer.bot action:</p>
-                        <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickRewardTitle</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Reward name</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUsername</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">User who redeemed</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUserInput</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">User's text input</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUserId</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">User ID number</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickChannelId</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Channel ID number</span>
+                                <!-- Test Section -->
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                                    <label style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Test Action</label>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <input type="text" id="test-reward-name" class="form-input" placeholder="Shoutout" style="flex: 1; padding: 0.5rem 0.75rem; font-size: 0.875rem;" oninput="updateRewardActionPreview()" />
+                                        <button class="btn btn-secondary" onclick="testRewardAction()" style="padding: 0.5rem 1rem; white-space: nowrap;">
+                                            <i class="fas fa-vial"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                    <div id="reward-test-status" style="margin-top: 0.5rem;"></div>
+                                </div>
+
+                                <button onclick="toggleRewardVariables()" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.8rem; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><i class="fas fa-code"></i> View Variables</span>
+                                    <span id="reward-vars-icon">▼</span>
+                                </button>
+
+                                <div id="reward-variables" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                                    <div style="display: grid; gap: 0.5rem;">
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickRewardTitle</span>
+                                            <span style="color: var(--text-muted);">Reward name</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUsername</span>
+                                            <span style="color: var(--text-muted);">User who redeemed</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUserInput</span>
+                                            <span style="color: var(--text-muted);">User's text input</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUserId</span>
+                                            <span style="color: var(--text-muted);">User ID</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickChannelId</span>
+                                            <span style="color: var(--text-muted);">Channel ID</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <h4 style="color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Kick Variables</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">When viewers gift Kicks, these variables are passed to your Streamer.bot action:</p>
-                        <div style="display: grid; gap: 0.75rem;">
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickGiftName</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Name of the gift</span>
+                        <div id="content-kicks" class="tab-content" style="display: none;">
+                            <div style="background: var(--bg-elevated); border-left: 3px solid #fd79a8; padding: 1.25rem; border-radius: var(--radius-sm);">
+                                <h4 style="color: var(--text-primary); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">Kicks Gifted</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.75rem;">Triggered when viewers gift Kicks to your channel</p>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Action Examples</span>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks1</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks10</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks50</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks100</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks500</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks1000</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks5000</span>
+                                        <span class="code-block" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Kicks10000</span>
+                                    </div>
+                                    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Action format: Kicks + Amount</p>
+                                </div>
+
+                                <!-- Test Section -->
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                                    <label style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Test Actions</label>
+                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+                                        <button class="btn btn-secondary" onclick="testKicksAction(1)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks1</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(10)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks10</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(50)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks50</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(100)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks100</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(500)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks500</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(1000)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks1000</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(5000)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks5000</button>
+                                        <button class="btn btn-secondary" onclick="testKicksAction(10000)" style="padding: 0.5rem; font-size: 0.75rem;">Kicks10000</button>
+                                    </div>
+                                    <div id="kicks-test-status" style="margin-top: 0.5rem;"></div>
+                                </div>
+
+                                <button onclick="toggleKicksVariables()" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.8rem; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><i class="fas fa-code"></i> View Variables</span>
+                                    <span id="kicks-vars-icon">▼</span>
+                                </button>
+
+                                <div id="kicks-variables" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                                    <div style="display: grid; gap: 0.5rem;">
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickGiftName</span>
+                                            <span style="color: var(--text-muted);">Gift name</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickGiftAmount</span>
+                                            <span style="color: var(--text-muted);">Amount gifted</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUsername</span>
+                                            <span style="color: var(--text-muted);">Gifter username</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUserId</span>
+                                            <span style="color: var(--text-muted);">Gifter ID</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickUserColor</span>
+                                            <span style="color: var(--text-muted);">Username color</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickMessage</span>
+                                            <span style="color: var(--text-muted);">Optional message</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickGiftAmount</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Amount of kicks gifted</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUsername</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">User who gifted</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUserId</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Gifter's user ID</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickUserColor</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Gifter's username color</span>
-                            </div>
-                            <div class="code-block" style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600;">kickMessage</span>
-                                <span style="color: var(--text-muted); font-size: 0.75rem;">Optional message with gift</span>
+                        </div>
+
+                        <div id="content-raids" class="tab-content" style="display: none;">
+                            <div style="background: var(--bg-elevated); border-left: 3px solid #a29bfe; padding: 1.25rem; border-radius: var(--radius-sm);">
+                                <h4 style="color: var(--text-primary); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem;">Hosts</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.75rem;">Triggered when another streamer hosts your channel</p>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Action Name</span>
+                                    <div class="code-block" style="margin-top: 0.25rem; padding: 0.5rem;">KickHost</div>
+                                    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Fixed action name</p>
+                                </div>
+
+                                <!-- Test Section -->
+                                <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                                    <label style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Test Action</label>
+                                    <button class="btn btn-secondary" onclick="testHostAction()" style="width: 100%; padding: 0.5rem 1rem;">
+                                        <i class="fas fa-vial"></i>
+                                        KickHost
+                                    </button>
+                                    <div id="raid-test-status" style="margin-top: 0.5rem;"></div>
+                                </div>
+
+                                <button onclick="toggleRaidVariables()" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.8rem; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><i class="fas fa-code"></i> View Variables</span>
+                                    <span id="raid-vars-icon">▼</span>
+                                </button>
+
+                                <div id="raid-variables" style="display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                                    <div style="display: grid; gap: 0.5rem;">
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickHostUsername</span>
+                                            <span style="color: var(--text-muted);">Hosting streamer</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickHostViewerCount</span>
+                                            <span style="color: var(--text-muted);">Viewer count</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickHostMessage</span>
+                                            <span style="color: var(--text-muted);">Optional message</span>
+                                        </div>
+                                        <div class="code-block" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; font-size: 0.75rem;">
+                                            <span style="font-weight: 600;">kickHostChatroomId</span>
+                                            <span style="color: var(--text-muted);">Chatroom ID</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </main>
 
         <footer class="footer">
@@ -757,7 +859,7 @@
             const settings = JSON.parse(localStorage.getItem('kickBridgeSettings') || '{}');
             const urlDiv = document.getElementById('url');
 
-            if (!settings.chatroomId) {
+            if (!settings.chatroomId || !settings.sbIp || !settings.sbPort || !settings.rewardPrefix) {
                 urlDiv.style.display = 'none';
                 return;
             }
@@ -792,17 +894,27 @@
             if (rewardPrefix !== 'KickReward-') url += `&rewardprefix=${encodeURIComponent(rewardPrefix)}`;
 
             urlDiv.innerHTML = `
-                <div class="result-label">Bridge URL Generated</div>
-                <textarea id="bridge-url-input" readonly class="url-textarea" rows="3">${url}</textarea>
-                <div class="btn-group">
-                    <button id="copy-url-btn" class="btn btn-primary">
-                        <i class="fas fa-copy"></i>
-                        Copy Bridge URL
-                    </button>
-                </div>
-                <div id="copy-url-confirm" class="status-message status-success" style="display:none;">
-                    <i class="fas fa-check"></i>
-                    Bridge URL copied to clipboard!
+                <div style="background: linear-gradient(135deg, rgba(0, 255, 195, 0.1), rgba(0, 191, 255, 0.1)); border: 2px solid var(--primary-brand); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1rem; box-shadow: 0 0 20px rgba(0, 255, 195, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                        <div style="width: 32px; height: 32px; background: var(--primary-brand); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bg-primary); font-weight: 800;">
+                            <i class="fas fa-exclamation"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 1rem; color: var(--primary-brand); text-transform: uppercase; letter-spacing: 0.05em;">Bridge URL Ready</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.125rem;">Add this URL as a Browser Source in OBS</div>
+                        </div>
+                    </div>
+                    <textarea id="bridge-url-input" readonly class="url-textarea" rows="3" style="border: 1px solid var(--primary-brand);">${url}</textarea>
+                    <div class="btn-group" style="margin-top: 0.75rem;">
+                        <button id="copy-url-btn" class="btn btn-primary">
+                            <i class="fas fa-copy"></i>
+                            Copy Bridge URL
+                        </button>
+                    </div>
+                    <div id="copy-url-confirm" class="status-message status-success" style="display:none; margin-top: 0.5rem;">
+                        <i class="fas fa-check"></i>
+                        Bridge URL copied to clipboard!
+                    </div>
                 </div>
             `;
             urlDiv.style.display = 'block';
@@ -927,9 +1039,9 @@
             const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
             const sbPort = document.getElementById('sb-port').value.trim() || '8080';
 
-            const errorDiv = document.getElementById('error');
-            errorDiv.className = 'status-message';
-            errorDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for Kicks${amount}...`;
+            const statusDiv = document.getElementById('kicks-test-status');
+            statusDiv.className = 'status-message';
+            statusDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for Kicks${amount}...`;
 
             const wsUrl = `ws://${sbIp}:${sbPort}/`;
             let responseReceived = false;
@@ -965,7 +1077,8 @@
                         const data = JSON.parse(event.data);
                         if (data.status === "ok" && data.args && data.args.actionName === `Kicks${amount}`) {
                             responseReceived = true;
-                            showSuccess(`✅ Test worked! Kicks${amount} action triggered successfully.`);
+                            statusDiv.className = 'status-message status-success';
+                            statusDiv.innerHTML = `<i class="fas fa-check"></i> ✅ Test worked! Kicks${amount} action triggered successfully.`;
                             ws.close();
                         }
                     } catch (e) {
@@ -974,13 +1087,15 @@
                 };
 
                 ws.onerror = (e) => {
-                    showError(`Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`);
+                    statusDiv.className = 'status-message status-error';
+                    statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`;
                 };
 
                 ws.onclose = (e) => {
                     // Don't show errors for normal close codes during testing
                     if (e.code !== 1000 && e.code !== 1005 && e.code !== 1006 && ws.readyState !== WebSocket.OPEN) {
-                        showError(`Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`);
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`;
                     }
                 };
 
@@ -988,19 +1103,98 @@
                 setTimeout(() => {
                     if (!responseReceived && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
                         ws.close();
-                        showError(`❌ No action found: Kicks${amount} action does not exist in Streamer.bot. Please create this action first.`);
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ❌ No action found: Kicks${amount} action does not exist in Streamer.bot. Please create this action first.`;
                     }
                 }, 3000);
 
             } catch (error) {
-                showError(`Failed to create WebSocket connection: ${error.message}`);
+                statusDiv.className = 'status-message status-error';
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to create WebSocket connection: ${error.message}`;
+            }
+        }
+
+        function testHostAction() {
+            const sbIp = document.getElementById('sb-ip').value.trim() || '127.0.0.1';
+            const sbPort = document.getElementById('sb-port').value.trim() || '8080';
+
+            const statusDiv = document.getElementById('raid-test-status');
+            statusDiv.className = 'status-message';
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending test trigger for KickHost...';
+
+            const wsUrl = `ws://${sbIp}:${sbPort}/`;
+            let responseReceived = false;
+
+            try {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    const testData = {
+                        request: 'DoAction',
+                        action: {
+                            name: 'KickHost'
+                        },
+                        args: {
+                            kickHostUsername: 'TestHost',
+                            kickHostViewerCount: 50,
+                            kickHostMessage: 'Test host message!',
+                            kickHostChatroomId: '12345'
+                        },
+                        id: `test-host-${Date.now()}`
+                    };
+
+                    ws.send(JSON.stringify(testData));
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.status === "ok" && data.args && data.args.actionName === 'KickHost') {
+                            responseReceived = true;
+                            statusDiv.className = 'status-message status-success';
+                            statusDiv.innerHTML = '<i class="fas fa-check"></i> ✅ Test worked! KickHost action triggered successfully.';
+                            ws.close();
+                        }
+                    } catch (e) {
+                        // Ignore parsing errors for non-response messages
+                    }
+                };
+
+                ws.onerror = (e) => {
+                    statusDiv.className = 'status-message status-error';
+                    statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`;
+                };
+
+                ws.onclose = (e) => {
+                    // Don't show errors for normal close codes during testing
+                    if (e.code !== 1000 && e.code !== 1005 && e.code !== 1006 && ws.readyState !== WebSocket.OPEN) {
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`;
+                    }
+                };
+
+                // Timeout after 3 seconds - check if action was found
+                setTimeout(() => {
+                    if (!responseReceived && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+                        ws.close();
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ❌ No action found: KickHost action does not exist in Streamer.bot. Please create this action first.';
+                    }
+                }, 3000);
+
+            } catch (error) {
+                statusDiv.className = 'status-message status-error';
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to create WebSocket connection: ${error.message}`;
             }
         }
 
         function testRewardAction() {
             const rewardName = document.getElementById('test-reward-name').value.trim();
+            const statusDiv = document.getElementById('reward-test-status');
+
             if (!rewardName) {
-                showError('Please enter a reward action name to test.');
+                statusDiv.className = 'status-message status-error';
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please enter a reward action name to test.';
                 return;
             }
 
@@ -1014,9 +1208,8 @@
 
             const actionName = `${rewardPrefix}${rewardName}`;
 
-            const errorDiv = document.getElementById('error');
-            errorDiv.className = 'status-message';
-            errorDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for ${actionName}...`;
+            statusDiv.className = 'status-message';
+            statusDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending test trigger for ${actionName}...`;
 
             const wsUrl = `ws://${sbIp}:${sbPort}/`;
             let responseReceived = false;
@@ -1048,7 +1241,8 @@
                         const data = JSON.parse(event.data);
                         if (data.status === "ok" && data.args && data.args.actionName === actionName) {
                             responseReceived = true;
-                            showSuccess(`✅ Test worked! ${actionName} action triggered successfully.`);
+                            statusDiv.className = 'status-message status-success';
+                            statusDiv.innerHTML = `<i class="fas fa-check"></i> ✅ Test worked! ${actionName} action triggered successfully.`;
                             ws.close();
                         }
                     } catch (e) {
@@ -1057,13 +1251,15 @@
                 };
 
                 ws.onerror = (e) => {
-                    showError(`Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`);
+                    statusDiv.className = 'status-message status-error';
+                    statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to connect to Streamer.bot at ${sbIp}:${sbPort}. Please test connection first.`;
                 };
 
                 ws.onclose = (e) => {
                     // Don't show errors for normal close codes during testing
                     if (e.code !== 1000 && e.code !== 1005 && e.code !== 1006 && ws.readyState !== WebSocket.OPEN) {
-                        showError(`Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`);
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Connection failed (Code: ${e.code}). Check Streamer.bot WebSocket settings.`;
                     }
                 };
 
@@ -1071,12 +1267,14 @@
                 setTimeout(() => {
                     if (!responseReceived && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
                         ws.close();
-                        showError(`❌ No action found: ${actionName} action does not exist in Streamer.bot. Please create this action first.`);
+                        statusDiv.className = 'status-message status-error';
+                        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ❌ No action found: ${actionName} action does not exist in Streamer.bot. Please create this action first.`;
                     }
                 }, 3000);
 
             } catch (error) {
-                showError(`Failed to create WebSocket connection: ${error.message}`);
+                statusDiv.className = 'status-message status-error';
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to create WebSocket connection: ${error.message}`;
             }
         }
 
@@ -1088,11 +1286,84 @@
             rewardPrefix = rewardPrefix.replace(/_/g, '-');
             if (!rewardPrefix.endsWith('-')) rewardPrefix += '-';
 
+            // Update the label showing the full action name
+            const previewLabel = document.getElementById('reward-action-preview-label');
+            if (previewLabel) {
+                if (rewardName) {
+                    previewLabel.textContent = `${rewardPrefix}${rewardName}`;
+                } else {
+                    previewLabel.textContent = `${rewardPrefix}`;
+                }
+            }
+
+            // Update the old preview element if it exists
             const preview = document.getElementById('reward-action-preview');
-            if (rewardName) {
-                preview.textContent = `${rewardPrefix}${rewardName}`;
+            if (preview) {
+                if (rewardName) {
+                    preview.textContent = `${rewardPrefix}${rewardName}`;
+                } else {
+                    preview.textContent = `${rewardPrefix}{RewardName}`;
+                }
+            }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.style.display = 'none');
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.event-tab');
+            tabs.forEach(tab => {
+                tab.style.borderBottomColor = 'transparent';
+                tab.style.color = 'var(--text-secondary)';
+            });
+
+            // Show selected tab content
+            document.getElementById(`content-${tabName}`).style.display = 'block';
+
+            // Add active class to selected tab
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.style.borderBottomColor = 'var(--primary-brand)';
+            activeTab.style.color = 'var(--primary-brand)';
+        }
+
+        function toggleRewardVariables() {
+            const content = document.getElementById('reward-variables');
+            const icon = document.getElementById('reward-vars-icon');
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.textContent = '▲';
             } else {
-                preview.textContent = `${rewardPrefix}{RewardName}`;
+                content.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        }
+
+        function toggleKicksVariables() {
+            const content = document.getElementById('kicks-variables');
+            const icon = document.getElementById('kicks-vars-icon');
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        }
+
+        function toggleRaidVariables() {
+            const content = document.getElementById('raid-variables');
+            const icon = document.getElementById('raid-vars-icon');
+
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                icon.textContent = '▼';
             }
         }
     </script>
