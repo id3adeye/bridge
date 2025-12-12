@@ -1032,8 +1032,9 @@
                 settings.chatroomId = chatroomId;
                 settings.channelId = channelId;
                 localStorage.setItem('kickBridgeSettings', JSON.stringify(settings));
-                
+
                 showSuccess('Chatroom ID fetched successfully!');
+                fetchRewards();
             } catch (err) {
                 resultDiv.classList.add('hidden');
                 showError(err.message);
